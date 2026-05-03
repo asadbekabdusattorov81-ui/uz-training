@@ -1,0 +1,588 @@
+<!doctype html>
+<html lang="uz">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>GeoGAT Akademiya | Kirish</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-deep:    #f0f4f8;
+      --bg-card:    rgba(255,255,255,0.95);
+      --border:     rgba(0,120,200,0.15);
+      --accent:     #0099e6;
+      --accent2:    #0066cc;
+      --text:       #1a2535;
+      --muted:      rgba(26,37,53,0.5);
+      --error:      #e53e3e;
+      --success:    #00a878;
+      --input-bg:   rgba(0,120,200,0.04);
+      --glow:       0 8px 40px rgba(0,120,200,0.12);
+    }
+
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+    body {
+      min-height: 100vh;
+      background: var(--bg-deep);
+      font-family: 'Sora', sans-serif;
+      color: var(--text);
+      overflow-x: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* ── Background canvas ── */
+    .bg-canvas {
+      position: fixed; inset: 0; z-index: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 10% 0%, rgba(0,120,200,0.07) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 50% at 90% 100%, rgba(0,180,220,0.06) 0%, transparent 55%),
+        linear-gradient(160deg, #f0f4f8 0%, #e8f0f8 50%, #f0f4f8 100%);
+    }
+
+    .grid-overlay {
+      position: fixed; inset: 0; z-index: 0;
+      background-image:
+        linear-gradient(rgba(0,120,200,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,120,200,0.04) 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+
+    /* ── Floating orbs ── */
+    .orb {
+      position: fixed; border-radius: 50%; filter: blur(80px); z-index: 0;
+      animation: drift 8s ease-in-out infinite alternate;
+    }
+    .orb1 { width:400px; height:400px; background:rgba(0,120,200,0.06); top:-100px; left:-100px; }
+    .orb2 { width:300px; height:300px; background:rgba(0,180,220,0.05); bottom:-80px; right:-80px; animation-delay:-4s; }
+    @keyframes drift { from{transform:translate(0,0)} to{transform:translate(30px,20px)} }
+
+    /* ── Card ── */
+    .card-wrap {
+      position: relative; z-index: 1;
+      width: 100%; max-width: 480px;
+      padding: 16px;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 44px 40px;
+      backdrop-filter: blur(24px);
+      box-shadow: var(--glow), 0 20px 60px rgba(0,80,160,0.1), 0 2px 8px rgba(0,0,0,0.06);
+      transition: box-shadow 0.4s;
+    }
+
+    /* ── Logo area ── */
+    .brand {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .brand-icon {
+      width: 56px; height: 56px;
+      margin: 0 auto 14px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, var(--accent2), var(--accent));
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Space Mono', monospace;
+      font-weight: 700; font-size: 18px;
+      letter-spacing: -1px; color: #000;
+      box-shadow: 0 0 30px rgba(0,210,190,0.35);
+    }
+
+    .brand h1 {
+      font-size: 22px; font-weight: 700;
+      letter-spacing: -0.5px;
+      background: linear-gradient(120deg, #1a2535 30%, var(--accent));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+
+    .brand p { font-size: 13px; color: var(--muted); margin-top: 4px; }
+
+    /* ── Tabs ── */
+    .tabs {
+      display: flex; gap: 4px;
+      background: rgba(0,0,0,0.05);
+      border: 1px solid var(--border);
+      border-radius: 12px; padding: 4px;
+      margin-bottom: 28px;
+    }
+
+    .tab-btn {
+      flex: 1; padding: 10px;
+      border: none; background: transparent;
+      color: var(--muted); font-family: 'Sora', sans-serif;
+      font-size: 13px; font-weight: 500;
+      border-radius: 8px; cursor: pointer;
+      transition: all 0.25s;
+    }
+
+    .tab-btn.active {
+      background: linear-gradient(135deg, rgba(0,102,204,0.12), rgba(0,153,230,0.12));
+      color: var(--accent2);
+      box-shadow: 0 0 12px rgba(0,120,200,0.1);
+    }
+
+    /* ── Forms ── */
+    .form-panel { display: none; }
+    .form-panel.active {
+      display: block;
+      animation: fadeUp 0.35s ease both;
+    }
+    @keyframes fadeUp {
+      from { opacity:0; transform:translateY(10px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+
+    /* ── Input groups ── */
+    .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+    .field {
+      margin-bottom: 14px;
+      position: relative;
+    }
+
+    .field label {
+      display: block; font-size: 11px; font-weight: 600;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 7px;
+    }
+
+    .field input {
+      width: 100%; padding: 13px 16px;
+      background: var(--input-bg);
+      border: 1px solid rgba(0,210,190,0.15);
+      border-radius: 10px;
+      color: var(--text); font-family: 'Sora', sans-serif; font-size: 14px;
+      outline: none; transition: border-color 0.25s, box-shadow 0.25s, background 0.25s;
+    }
+
+    .field input:focus {
+      border-color: var(--accent);
+      background: rgba(0,210,190,0.08);
+      box-shadow: 0 0 0 3px rgba(0,210,190,0.1);
+    }
+
+    .field input::placeholder { color: rgba(232,244,248,0.25); }
+
+    /* Password toggle */
+    .pw-wrap { position: relative; }
+    .pw-wrap input { padding-right: 44px; }
+    .pw-eye {
+      position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
+      background: none; border: none; cursor: pointer;
+      color: var(--muted); display: flex; align-items: center;
+      transition: color 0.2s;
+    }
+    .pw-eye:hover { color: var(--accent); }
+
+    /* ── Role selector ── */
+    .role-label {
+      display: block; font-size: 11px; font-weight: 600;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 10px;
+    }
+
+    .role-cards {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .role-card {
+      position: relative; cursor: pointer;
+    }
+
+    .role-card input[type="radio"] {
+      position: absolute; opacity: 0; width: 0; height: 0;
+    }
+
+    .role-card label {
+      display: flex; flex-direction: column; align-items: center; gap: 8px;
+      padding: 16px 12px;
+      border: 1px solid rgba(0,210,190,0.15);
+      border-radius: 12px;
+      background: var(--input-bg);
+      cursor: pointer;
+      transition: all 0.25s;
+      text-transform: none; letter-spacing: 0; font-size: 13px;
+      color: var(--muted);
+    }
+
+    .role-card label .ri { font-size: 24px; }
+
+    .role-card input:checked + label {
+      border-color: var(--accent);
+      background: rgba(0,210,190,0.1);
+      color: var(--text);
+      box-shadow: 0 0 16px rgba(0,210,190,0.15);
+    }
+
+    .role-card label:hover {
+      border-color: rgba(0,210,190,0.4);
+      color: var(--text);
+    }
+
+    /* ── Button ── */
+    .submit-btn {
+      width: 100%; padding: 14px;
+      border: none; border-radius: 12px;
+      background: linear-gradient(135deg, var(--accent2), var(--accent));
+      color: #000; font-family: 'Sora', sans-serif;
+      font-size: 15px; font-weight: 700;
+      cursor: pointer; letter-spacing: 0.02em;
+      position: relative; overflow: hidden;
+      transition: transform 0.2s, box-shadow 0.2s;
+      margin-top: 4px;
+    }
+
+    .submit-btn::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.15), transparent);
+      opacity: 0; transition: opacity 0.2s;
+    }
+
+    .submit-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(0,210,190,0.35);
+    }
+    .submit-btn:hover::after { opacity: 1; }
+    .submit-btn:active { transform: translateY(0); }
+
+    .submit-btn.loading {
+      pointer-events: none;
+      opacity: 0.7;
+    }
+
+    .spinner {
+      display: inline-block; width: 16px; height: 16px;
+      border: 2px solid rgba(0,0,0,0.3);
+      border-top-color: #000;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      vertical-align: middle; margin-right: 6px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Messages ── */
+    .msg {
+      margin-top: 14px; padding: 11px 14px;
+      border-radius: 9px; font-size: 13px;
+      display: none; align-items: center; gap: 8px;
+    }
+
+    .msg.error {
+      background: rgba(255,95,126,0.12);
+      border: 1px solid rgba(255,95,126,0.3);
+      color: var(--error);
+    }
+
+    .msg.success {
+      background: rgba(0,229,160,0.1);
+      border: 1px solid rgba(0,229,160,0.25);
+      color: var(--success);
+    }
+
+    .msg.show { display: flex; animation: fadeUp 0.3s ease both; }
+
+    /* ── Divider ── */
+    .divider {
+      text-align: center; font-size: 11px; color: var(--muted);
+      margin: 6px 0 2px;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 520px) {
+      .card { padding: 32px 22px; }
+      .row-2 { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="bg-canvas"></div>
+  <div class="grid-overlay"></div>
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+
+  <div class="card-wrap">
+    <div class="card">
+
+      <!-- Brand -->
+      <div class="brand">
+        <div class="brand-icon">GG</div>
+        <h1>GeoGAT Akademiya</h1>
+        <p>Bilimingizni yangi bosqichga olib chiqing</p>
+      </div>
+
+      <!-- Tabs -->
+      <div class="tabs">
+        <button class="tab-btn active" id="tabLogin" onclick="switchTab('login')">Kirish</button>
+        <button class="tab-btn" id="tabRegister" onclick="switchTab('register')">Ro'yxatdan o'tish</button>
+      </div>
+
+      <!-- ─── LOGIN FORM ─── -->
+      <div class="form-panel active" id="panelLogin">
+        <div class="field">
+          <label>Email manzil</label>
+          <input type="email" id="loginEmail" placeholder="email@example.com" autocomplete="email" />
+        </div>
+        <div class="field">
+          <label>Parol</label>
+          <div class="pw-wrap">
+            <input type="password" id="loginPass" placeholder="••••••••" autocomplete="current-password" />
+            <button class="pw-eye" onclick="togglePw('loginPass', this)" tabindex="-1">
+              <svg id="eyeLogin" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <button class="submit-btn" id="btnLogin" onclick="doLogin()">Kirish</button>
+        <div class="msg error" id="loginErr"></div>
+
+        <div class="divider" style="margin-top:18px;">
+          Akkountingiz yo'qmi? — <a href="#" style="color:var(--accent);text-decoration:none;" onclick="switchTab('register')">Ro'yxatdan o'ting</a>
+        </div>
+      </div>
+
+      <!-- ─── REGISTER FORM ─── -->
+      <div class="form-panel" id="panelRegister">
+        <div class="row-2">
+          <div class="field">
+            <label>Ism</label>
+            <input type="text" id="regIsm" placeholder="Islom" />
+          </div>
+          <div class="field">
+            <label>Familiya</label>
+            <input type="text" id="regFamiliya" placeholder="Karimov" />
+          </div>
+        </div>
+        <div class="field">
+          <label>Otasining ismi</label>
+          <input type="text" id="regOta" placeholder="Abdullayevich" />
+        </div>
+        <div class="field">
+          <label>Email manzil</label>
+          <input type="email" id="regEmail" placeholder="email@example.com" autocomplete="email" />
+        </div>
+        <div class="field">
+          <label>Parol</label>
+          <div class="pw-wrap">
+            <input type="password" id="regPass" placeholder="kamida 6 ta belgi" autocomplete="new-password" />
+            <button class="pw-eye" onclick="togglePw('regPass', this)" tabindex="-1">
+              <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Role -->
+        <span class="role-label">Rolingizni tanlang</span>
+        <div class="role-cards">
+          <div class="role-card">
+            <input type="radio" name="role" id="roleTalaba" value="talaba" checked />
+            <label for="roleTalaba">
+              <span class="ri">🎓</span>
+              Talaba
+            </label>
+          </div>
+          <div class="role-card">
+            <input type="radio" name="role" id="roleMutaxassis" value="mutaxassis" />
+            <label for="roleMutaxassis">
+              <span class="ri">👨‍💼</span>
+              Mutaxassis
+            </label>
+          </div>
+        </div>
+
+        <button class="submit-btn" id="btnRegister" onclick="doRegister()">Ro'yxatdan o'tish</button>
+        <div class="msg error" id="regErr"></div>
+        <div class="msg success" id="regSuccess"></div>
+
+        <div class="divider" style="margin-top:18px;">
+          Allaqachon akkountingiz bormi? — <a href="#" style="color:var(--accent);text-decoration:none;" onclick="switchTab('login')">Kiring</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp }        from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getAuth, createUserWithEmailAndPassword,
+             signInWithEmailAndPassword, onAuthStateChanged,
+             updateProfile }        from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import { getFirestore, doc, setDoc, getDoc }
+                                    from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    /* ── Firebase config ── */
+    const firebaseConfig = {
+      apiKey:            "AIzaSyDlKFVAteGjZ3pNnKsvMsubfvTZXOdgg3g",
+      authDomain:        "sound-memory-474606-p1.firebaseapp.com",
+      projectId:         "sound-memory-474606-p1",
+      storageBucket:     "sound-memory-474606-p1.firebasestorage.app",
+      messagingSenderId: "1088934512143",
+      appId:             "1:1088934512143:web:ccb67476ecb23c2375c57a",
+      measurementId:     "G-X4H5B74V1Y"
+    };
+
+    const app  = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db   = getFirestore(app);
+
+    /* ── Redirect if already logged in ── */
+    // Faqat sahifa yuklanganda tekshiramiz, keyin o'chirib qo'yamiz
+    let authChecked = false;
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (!authChecked && user) {
+        window.location.replace("index.html");
+      }
+      authChecked = true;
+    });
+
+    /* ── HELPERS ── */
+    function setLoading(btnId, loading) {
+      const btn = document.getElementById(btnId);
+      if (loading) {
+        btn.classList.add('loading');
+        btn.innerHTML = '<span class="spinner"></span>Yuklanmoqda...';
+      } else {
+        btn.classList.remove('loading');
+        btn.textContent = btnId === 'btnLogin' ? 'Kirish' : "Ro'yxatdan o'tish";
+      }
+    }
+
+    function showErr(id, msg) {
+      const el = document.getElementById(id);
+      el.textContent = '⚠ ' + msg;
+      el.className = 'msg error show';
+    }
+
+    function showSuccess(id, msg) {
+      const el = document.getElementById(id);
+      el.textContent = '✓ ' + msg;
+      el.className = 'msg success show';
+    }
+
+    function hideMsg(...ids) {
+      ids.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.className = 'msg';
+      });
+    }
+
+    function translateError(code) {
+      const map = {
+        'auth/invalid-email':          "Email manzil noto'g'ri",
+        'auth/user-not-found':         "Bu email bilan foydalanuvchi topilmadi",
+        'auth/wrong-password':         "Parol noto'g'ri",
+        'auth/email-already-in-use':   "Bu email allaqachon ro'yxatdan o'tgan",
+        'auth/weak-password':          "Parol kamida 6 ta belgidan iborat bo'lishi kerak",
+        'auth/too-many-requests':      "Juda ko'p urinish. Biroz kuting",
+        'auth/network-request-failed': "Internet aloqasini tekshiring",
+        'auth/invalid-credential':     "Email yoki parol noto'g'ri",
+      };
+      return map[code] || "Xatolik yuz berdi: " + code;
+    }
+
+    /* ── LOGIN ── */
+    window.doLogin = async () => {
+      hideMsg('loginErr');
+      const email = document.getElementById('loginEmail').value.trim();
+      const pass  = document.getElementById('loginPass').value;
+      if (!email || !pass) { showErr('loginErr', "Email va parolni kiriting"); return; }
+      setLoading('btnLogin', true);
+      try {
+        await signInWithEmailAndPassword(auth, email, pass);
+        window.location.replace("index.html");
+      } catch (e) {
+        showErr('loginErr', translateError(e.code));
+        setLoading('btnLogin', false);
+      }
+    };
+
+    /* ── REGISTER ── */
+    window.doRegister = async () => {
+      hideMsg('regErr', 'regSuccess');
+      const ism       = document.getElementById('regIsm').value.trim();
+      const familiya  = document.getElementById('regFamiliya').value.trim();
+      const ota       = document.getElementById('regOta').value.trim();
+      const email     = document.getElementById('regEmail').value.trim();
+      const pass      = document.getElementById('regPass').value;
+      const role      = document.querySelector('input[name="role"]:checked').value;
+
+      if (!ism || !familiya || !ota || !email || !pass) {
+        showErr('regErr', "Barcha maydonlarni to'ldiring");
+        return;
+      }
+      setLoading('btnRegister', true);
+      try {
+        const cred = await createUserWithEmailAndPassword(auth, email, pass);
+        const user = cred.user;
+
+        // Display name yangilash
+        await updateProfile(user, { displayName: `${ism} ${familiya}` });
+
+        // Firestore ga saqlash — redirect shu tugagandan keyin
+        await setDoc(doc(db, "users", user.uid), {
+          ism, familiya, otaIsmi: ota,
+          email, role,
+          createdAt: new Date().toISOString(),
+          uid: user.uid
+        });
+
+        // Hammasi saqlandi — endi o'tamiz
+        window.location.replace("index.html");
+
+      } catch (e) {
+        showErr('regErr', translateError(e.code));
+        setLoading('btnRegister', false);
+      }
+    };
+
+  </script>
+
+  <!-- Tab + PW toggle (no module needed) -->
+  <script>
+    function switchTab(tab) {
+      const login = document.getElementById('panelLogin');
+      const reg   = document.getElementById('panelRegister');
+      const tl    = document.getElementById('tabLogin');
+      const tr    = document.getElementById('tabRegister');
+
+      if (tab === 'login') {
+        login.classList.add('active');    reg.classList.remove('active');
+        tl.classList.add('active');       tr.classList.remove('active');
+      } else {
+        reg.classList.add('active');      login.classList.remove('active');
+        tr.classList.add('active');       tl.classList.remove('active');
+      }
+    }
+
+    function togglePw(id, btn) {
+      const inp = document.getElementById(id);
+      const isText = inp.type === 'text';
+      inp.type = isText ? 'password' : 'text';
+      btn.innerHTML = isText
+        ? `<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`
+        : `<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>`;
+    }
+
+    // Enter key support
+    document.addEventListener('keydown', e => {
+      if (e.key !== 'Enter') return;
+      if (document.getElementById('panelLogin').classList.contains('active')) {
+        window.doLogin && window.doLogin();
+      } else {
+        window.doRegister && window.doRegister();
+      }
+    });
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,900 @@
+/* ================================
+   GeoGAT Akademiya - ESRI style
+   style.css (xatosiz)
+================================== */
+
+/* ===== RESET ===== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background: #ffffff;
+  color: #1b1b1b;
+  line-height: 1.5;
+}
+
+/* ===== WRAPPER ===== */
+.wrap {
+  width: 100%;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+/* ================================
+   TOP HEADER (oq)
+================================== */
+.topHeader {
+  background: #ffffff;
+  border-bottom: 1px solid #e6e6e6;
+  padding: 10px 0;
+}
+
+.topHeaderFlex {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.brandTop .brandName {
+  font-size: 18px;
+  font-weight: 700;
+  color: #111;
+}
+
+.brandTop .brandDesc {
+  font-size: 13px;
+  color: #555;
+  margin-top: 2px;
+}
+
+.topLinks {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.topLinks a {
+  font-size: 14px;
+  color: #0b5cad;
+}
+
+.topLinks a:hover {
+  text-decoration: underline;
+}
+
+/* ================================
+   MENU BAR (kulrang)
+================================== */
+.menuBar {
+  background: #3a3a3a;
+  color: #fff;
+}
+
+.menuFlex {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0;
+  gap: 16px;
+}
+
+.menuLeft {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.homeBtn {
+  display: inline-flex;
+  width: 34px;
+  height: 34px;
+  align-items: center;
+  justify-content: center;
+  background: #2f2f2f;
+  border-radius: 6px;
+  font-size: 18px;
+  color: #fff;
+}
+
+.homeBtn:hover {
+  background: #262626;
+}
+
+.menuTitle {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.menuNav {
+  display: flex;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+
+.menuNav a {
+  color: #ffffff;
+  font-size: 14px;
+  opacity: 0.92;
+}
+
+.menuNav a:hover {
+  opacity: 1;
+  text-decoration: underline;
+}
+
+/* ================================
+   HERO SLIDER
+================================== */
+.hero {
+  position: relative;
+  width: 100%;
+  height: 460px;
+  overflow: hidden;
+  background: #111;
+}
+
+.slide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.7s ease;
+}
+
+.slide.active {
+  opacity: 1;
+  z-index: 2;
+}
+
+.slide img {
+  width: 100%;
+  height: 460px;
+  object-fit: cover;
+}
+
+.heroOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(0,0,0,0.55), rgba(0,0,0,0.15));
+  z-index: 1;
+}
+
+.heroContent {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  padding-left: 70px;
+}
+
+.heroBox {
+  max-width: 560px;
+  color: #fff;
+}
+
+.heroBox h1 {
+  font-size: 52px;
+  font-weight: 300;
+  margin-bottom: 14px;
+  letter-spacing: 0.5px;
+}
+
+.heroBox p {
+  font-size: 18px;
+  color: rgba(255,255,255,0.9);
+  margin-bottom: 18px;
+}
+
+.heroBtn {
+  display: inline-block;
+  background: #0079c1;
+  color: #fff;
+  padding: 12px 18px;
+  border-radius: 4px;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.heroBtn:hover {
+  background: #0063a0;
+}
+
+/* arrows */
+.heroArrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 5;
+  width: 46px;
+  height: 46px;
+  border: none;
+  cursor: pointer;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.45);
+  color: #fff;
+  font-size: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.heroArrow:hover {
+  background: rgba(0,0,0,0.65);
+}
+
+.heroArrow.prev {
+  left: 14px;
+}
+
+.heroArrow.next {
+  right: 14px;
+}
+
+/* thumbs */
+.thumbs {
+  position: absolute;
+  left: 50%;
+  bottom: 16px;
+  transform: translateX(-50%);
+  z-index: 6;
+  display: flex;
+  gap: 8px;
+  background: rgba(0,0,0,0.25);
+  padding: 6px;
+  border-radius: 8px;
+}
+
+.thumb {
+  border: 2px solid transparent;
+  padding: 0;
+  width: 92px;
+  height: 48px;
+  overflow: hidden;
+  cursor: pointer;
+  border-radius: 6px;
+  background: transparent;
+}
+
+.thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: grayscale(90%);
+  opacity: 0.85;
+}
+
+.thumb.active {
+  border-color: #ffffff;
+}
+
+.thumb.active img {
+  filter: grayscale(0%);
+  opacity: 1;
+}
+
+/* ================================
+   SEARCH BLOCK
+================================== */
+.searchBlock {
+  background: #f4f6f8;
+  padding: 46px 0;
+  text-align: center;
+  border-bottom: 1px solid #e6e6e6;
+}
+
+.searchBlock h2 {
+  font-size: 38px;
+  font-weight: 300;
+  margin-bottom: 22px;
+  color: #333;
+}
+
+.searchRow {
+  max-width: 860px;
+  margin: 0 auto;
+  display: flex;
+  gap: 10px;
+  padding: 0 10px;
+}
+
+.searchRow input {
+  flex: 1;
+  height: 48px;
+  padding: 0 14px;
+  border: 1px solid #cfcfcf;
+  border-radius: 3px;
+  font-size: 15px;
+  outline: none;
+}
+
+.searchRow input:focus {
+  border-color: #0079c1;
+}
+
+.searchRow button {
+  width: 170px;
+  height: 48px;
+  border: none;
+  border-radius: 3px;
+  background: #0079c1;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.searchRow button:hover {
+  background: #0063a0;
+}
+
+/* ================================
+   BLUE MENU
+================================== */
+.blueMenu {
+  background: #0079c1;
+}
+
+.blueWrap {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.blueItem {
+  flex: 1;
+  color: #fff;
+  padding: 18px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  border-right: 1px solid rgba(255,255,255,0.25);
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.blueItem:last-child {
+  border-right: none;
+}
+
+.blueItem:hover {
+  background: rgba(0,0,0,0.08);
+}
+
+.blueIcon {
+  font-size: 20px;
+}
+
+/* ================================
+   SUPPORT SECTION (cards)
+================================== */
+.supportSection {
+  background: #ffffff;
+  padding: 56px 0;
+}
+
+.sectionTitle {
+  text-align: center;
+  max-width: 820px;
+  margin: 0 auto 34px auto;
+}
+
+.sectionTitle h2 {
+  font-size: 44px;
+  font-weight: 300;
+  color: #222;
+  margin-bottom: 12px;
+}
+
+.sectionTitle p {
+  font-size: 16px;
+  color: #555;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 22px;
+  margin-top: 20px;
+}
+
+.card {
+  border: 1px solid #e5e5e5;
+  background: #fff;
+  overflow: hidden;
+  border-radius: 6px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+  transition: transform 0.25s ease;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+}
+
+.cardImg {
+  height: 190px;
+  overflow: hidden;
+}
+
+.cardImg img {
+  width: 100%;
+  height: 190px;
+  object-fit: cover;
+}
+
+.cardBody {
+  padding: 26px 26px 30px;
+  text-align: center;
+}
+
+.cardBody h3 {
+  font-size: 30px;
+  font-weight: 300;
+  margin: 0 0 10px;
+  color: #222;
+}
+
+.cardBody p {
+  font-size: 15px;
+  color: #555;
+}
+
+/* ================================
+   NEWS / BLOG SECTION
+================================== */
+.newsSection {
+  background: #f4f6f8;
+  padding: 54px 0 60px;
+  border-top: 1px solid #e6e6e6;
+}
+
+.tabs {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 36px;
+}
+
+.tabBtn {
+  border: none;
+  cursor: pointer;
+  padding: 12px 40px;
+  font-size: 18px;
+  background: #ededed;
+  color: #333;
+  font-weight: 600;
+}
+
+.tabBtn.active {
+  background: #ffffff;
+  border-top: 3px solid #0079c1;
+}
+
+.tabContent {
+  display: none;
+}
+
+.tabContent.active {
+  display: block;
+}
+
+.newsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.newsItem {
+  text-align: center;
+  padding: 10px 10px 0;
+}
+
+.newsCircle {
+  width: 130px;
+  height: 130px;
+  margin: 0 auto 18px auto;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 4px solid #0079c1;
+  background: #fff;
+}
+
+.newsCircle img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.newsItem h3 {
+  font-size: 20px;
+  font-weight: 800;
+  margin-bottom: 8px;
+  color: #111;
+}
+
+.newsMeta {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 14px;
+}
+
+.newsItem p {
+  font-size: 14px;
+  color: #444;
+  max-width: 280px;
+  margin: 0 auto;
+}
+
+/* ================================
+   FOOTER
+================================== */
+.footer {
+  background: #2f2f2f;
+  color: #fff;
+  padding: 18px 0;
+}
+
+.footerFlex {
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  font-size: 14px;
+  opacity: 0.92;
+}
+
+/* ================================
+   RESPONSIVE
+================================== */
+@media (max-width: 980px) {
+  .heroContent {
+    padding-left: 26px;
+  }
+
+  .heroBox h1 {
+    font-size: 38px;
+  }
+
+  .cards {
+    grid-template-columns: 1fr;
+  }
+
+  .newsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .blueWrap {
+    flex-wrap: wrap;
+  }
+
+  .blueItem {
+    flex: 1 1 50%;
+    border-right: none;
+    border-bottom: 1px solid rgba(255,255,255,0.25);
+  }
+
+  .blueItem:nth-last-child(-n+2) {
+    border-bottom: none;
+  }
+}
+
+@media (max-width: 600px) {
+  .menuFlex {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .menuNav {
+    gap: 10px;
+  }
+
+  .searchRow {
+    flex-direction: column;
+  }
+
+  .searchRow button {
+    width: 100%;
+  }
+
+  .thumb {
+    width: 70px;
+    height: 40px;
+  }
+}
+/* =========================
+   8) READY TO LEARN (CTA)
+========================= */
+.ctaBanner {
+  position: relative;
+  min-height: 220px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+
+  /* fon (ESRI kabi gradient) */
+  background: linear-gradient(90deg, #0b6bbf 0%, #0a7bd1 35%, #1d9a3a 100%);
+  overflow: hidden;
+}
+
+/* ustiga yumshoq qoraytirish */
+.ctaBanner .ctaOverlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.15);
+}
+
+/* ichki kontent */
+.ctaBanner .ctaInner {
+  position: relative;
+  z-index: 2;
+  padding: 40px 15px;
+}
+
+.ctaBanner h2 {
+  margin: 0 0 18px;
+  font-size: 38px;
+  font-weight: 500;
+  color: #fff;
+  letter-spacing: 0.3px;
+}
+
+.ctaBtn {
+  display: inline-block;
+  padding: 10px 42px;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  color: #fff;
+  text-decoration: none;
+  border-radius: 2px;
+  font-size: 15px;
+  transition: 0.2s ease;
+}
+
+.ctaBtn:hover {
+  background: rgba(0, 0, 0, 0.35);
+  border-color: rgba(255, 255, 255, 0.8);
+}
+
+
+/* =========================
+   9) BLACK BAR (Contact/Connect)
+========================= */
+.blackBar {
+  background: #3b3b3b;
+  color: #fff;
+  font-size: 14px;
+}
+
+.blackBarInner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 0;
+  gap: 20px;
+}
+
+.blackText {
+  opacity: 0.95;
+}
+
+.blackRight {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  white-space: nowrap;
+}
+
+.blackRight span {
+  opacity: 0.9;
+}
+
+.socialIcons {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.socialIcons a {
+  width: 28px;
+  height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 2px;
+
+  color: #fff;
+  text-decoration: none;
+  font-size: 14px;
+  transition: 0.2s ease;
+}
+
+.socialIcons a:hover {
+  border-color: rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+
+/* =========================
+   10) BIG FOOTER (ESRI style)
+========================= */
+.bigFooter {
+  background: #fff;
+  border-top: 3px solid #0b6bbf;
+  padding-top: 40px;
+}
+
+.footerGrid {
+  display: grid;
+  grid-template-columns: 220px repeat(5, 1fr);
+  gap: 28px;
+  padding-bottom: 30px;
+}
+
+/* LOGO block */
+.footerBrand {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.footerLogoBox {
+  width: 120px;
+  height: 120px;
+  border: 3px solid #6b6b6b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.footerLogoText {
+  font-size: 13px;
+  font-weight: 700;
+  color: #6b6b6b;
+  line-height: 1.2;
+  text-align: center;
+}
+
+/* social icons grid */
+.footerSocialGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 36px);
+  gap: 10px;
+}
+
+.footerSocialGrid a {
+  width: 36px;
+  height: 36px;
+  border: 1px solid #cfcfcf;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #555;
+  text-decoration: none;
+  font-size: 14px;
+  transition: 0.2s ease;
+}
+
+.footerSocialGrid a:hover {
+  border-color: #0b6bbf;
+  color: #0b6bbf;
+}
+
+/* footer columns */
+.footerCol h4 {
+  margin: 0 0 12px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  color: #2b2b2b;
+  text-transform: uppercase;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 10px;
+}
+
+.footerCol a {
+  display: block;
+  text-decoration: none;
+  color: #4b4b4b;
+  font-size: 14px;
+  padding: 6px 0;
+  transition: 0.2s ease;
+}
+
+.footerCol a:hover {
+  color: #0b6bbf;
+  text-decoration: underline;
+}
+
+/* footer bottom */
+.footerBottom {
+  border-top: 1px solid #ddd;
+  padding: 18px 0;
+  background: #fff;
+}
+
+.footerBottomInner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.footerLang {
+  color: #444;
+  font-size: 14px;
+}
+
+.footerLinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+}
+
+.footerLinks a {
+  font-size: 14px;
+  color: #4b4b4b;
+  text-decoration: none;
+}
+
+.footerLinks a:hover {
+  color: #0b6bbf;
+  text-decoration: underline;
+}
+
+
+/* =========================
+   RESPONSIVE (telefon)
+========================= */
+@media (max-width: 1000px) {
+  .footerGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .footerBrand {
+    grid-column: 1 / -1;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
+  }
+
+  .footerSocialGrid {
+    grid-template-columns: repeat(6, 36px);
+  }
+}
+
+@media (max-width: 600px) {
+  .ctaBanner h2 {
+    font-size: 28px;
+  }
+
+  .blackBarInner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .footerGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .footerSocialGrid {
+    grid-template-columns: repeat(4, 36px);
+  }
+}

@@ -1,0 +1,1250 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GeoGAT — Admin Panel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:        #f8f9fc;
+  --surface:   #ffffff;
+  --surface2:  #f1f4f9;
+  --border:    #e4e8f0;
+  --border2:   #d0d7e6;
+  --accent:    #3b6ef8;
+  --accent2:   #2757e0;
+  --accent-bg: #eff3ff;
+  --success:   #16a34a;
+  --success-bg:#f0fdf4;
+  --danger:    #dc2626;
+  --danger-bg: #fff1f1;
+  --warn:      #d97706;
+  --text:      #111827;
+  --text2:     #4b5563;
+  --text3:     #9ca3af;
+  --teal:      #0d9488;
+  --font:      'Plus Jakarta Sans', sans-serif;
+  --mono:      'JetBrains Mono', monospace;
+  --radius:    12px;
+  --sidebar:   240px;
+  --shadow:    0 1px 4px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.04);
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+}
+
+body { font-family: var(--font); background: var(--bg); color: var(--text); min-height: 100vh; font-size: 14px; line-height: 1.6; }
+
+#view-catalog { display: block; }
+#view-admin   { display: none;  }
+
+/* CATALOG HERO */
+.cat-hero {
+  background: linear-gradient(135deg, #1a6fc4 0%, #0d4a8a 100%);
+  padding: 2.5rem 2rem 2rem;
+  text-align: center;
+  color: #fff;
+}
+.cat-hero h1 { font-size: 28px; font-weight: 700; margin-bottom: 0.4rem; }
+.cat-hero h1 span {
+  background: rgba(255,255,255,0.18);
+  padding: 2px 12px; border-radius: 20px;
+  font-size: 18px; margin-left: 8px; vertical-align: middle;
+}
+.cat-hero p { font-size: 13.5px; color: rgba(255,255,255,0.85); max-width: 680px; margin: 0 auto 1.2rem; line-height: 1.7; }
+.hero-steps { display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 6px; font-size: 12.5px; color: rgba(255,255,255,0.9); }
+.hero-steps .step { background: rgba(255,255,255,0.14); border: 1px solid rgba(255,255,255,0.28); padding: 4px 12px; border-radius: 20px; }
+.hero-steps .arr  { color: rgba(255,255,255,0.45); font-size: 14px; }
+
+.search-wrap { max-width: 900px; margin: -22px auto 0; padding: 0 1.5rem; position: relative; z-index: 10; }
+.search-box {
+  background: #fff; border-radius: 12px; padding: 0.9rem 1rem;
+  display: flex; gap: 8px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.11);
+}
+.search-box input {
+  flex: 1; border: 1.5px solid #e0e6ef; border-radius: 8px;
+  padding: 9px 13px; font-size: 13.5px; color: var(--text);
+  outline: none; transition: border-color 0.2s; font-family: var(--font);
+}
+.search-box input:focus { border-color: #1a6fc4; }
+.search-box input::placeholder { color: #aab0be; }
+.sbtn { padding: 9px 18px; border-radius: 8px; border: none; font-family: var(--font); font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.15s; }
+.sbtn-primary { background: #1a6fc4; color: #fff; }
+.sbtn-primary:hover { background: #155a9e; }
+.sbtn-ghost { background: #f0f3f8; color: #555; border: 1.5px solid #e0e6ef; }
+.sbtn-ghost:hover { background: #e4e9f2; }
+
+.stats-row { max-width: 900px; margin: 1.6rem auto 0; padding: 0 1.5rem; display: flex; gap: 10px; flex-wrap: wrap; }
+.stat-pill { background: #fff; border: 1px solid #e0e6ef; border-radius: 20px; padding: 5px 14px; font-size: 12.5px; color: #555; display: flex; align-items: center; gap: 5px; }
+.stat-pill strong { color: #1a6fc4; }
+
+.grid-wrap { max-width: 1080px; margin: 1.8rem auto 3rem; padding: 0 1.5rem; }
+.grid-label { font-size: 12.5px; color: #888; margin-bottom: 1rem; font-weight: 500; }
+.cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(310px, 1fr)); gap: 1.4rem; }
+
+.cat-card { background: #fff; border-radius: 14px; overflow: hidden; border: 1px solid #e8edf4; transition: transform 0.2s, box-shadow 0.2s; cursor: pointer; }
+.cat-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(26,111,196,0.12); border-color: #b8d4f0; }
+.cat-card-img { position: relative; }
+.cat-card-img .thumb { width: 100%; height: 178px; display: flex; align-items: center; justify-content: center; font-size: 52px; }
+.badge { position: absolute; top: 11px; left: 11px; font-size: 11px; font-weight: 700; padding: 3px 11px; border-radius: 20px; color: #fff; letter-spacing: 0.3px; text-transform: uppercase; }
+.badge.boshlangich { background: #27ae60; }
+.badge.orta        { background: #1a6fc4; }
+.badge.advanced    { background: #c0392b; }
+.mnum { position: absolute; bottom: 10px; right: 11px; background: rgba(0,0,0,0.52); color: #fff; font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 20px; backdrop-filter: blur(4px); }
+.cat-card-body { padding: 1.05rem 1.15rem 1.15rem; }
+.cat-card-body .ctitle { font-size: 15px; font-weight: 700; color: #1a1a2e; margin-bottom: 5px; }
+.cat-card-body .cdesc  { font-size: 13px; color: #6b7280; line-height: 1.5; margin-bottom: 9px; }
+.cat-card-body .cmeta  { display: flex; gap: 12px; font-size: 12px; color: #9ca3af; margin-bottom: 1rem; }
+.card-actions { display: flex; gap: 8px; }
+.ca-primary { flex: 1; background: #1a6fc4; color: #fff; border: none; border-radius: 8px; padding: 9px 0; font-size: 13px; font-weight: 600; cursor: pointer; transition: background 0.2s; font-family: var(--font); }
+.ca-primary:hover { background: #155a9e; }
+.ca-secondary { flex: 1; background: #f0f4fb; color: #1a6fc4; border: 1.5px solid #c8dcf4; border-radius: 8px; padding: 9px 0; font-size: 13px; font-weight: 600; cursor: pointer; transition: background 0.2s; font-family: var(--font); }
+.ca-secondary:hover { background: #dceaf8; }
+.no-result { text-align: center; padding: 3rem; color: #aab0be; font-size: 14px; display: none; grid-column: 1/-1; }
+
+/* ADMIN VIEW */
+.admin-wrap { display: flex; min-height: 100vh; }
+.sidebar { width: var(--sidebar); background: var(--surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; position: fixed; top: 0; left: 0; bottom: 0; z-index: 200; transition: transform 0.3s ease; }
+.sidebar-logo { padding: 20px 18px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
+.logo-icon { width: 36px; height: 36px; background: var(--accent); border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+.logo-text span  { display: block; font-size: 14px; font-weight: 700; color: var(--text); }
+.logo-text small { font-size: 11px; color: var(--text3); font-family: var(--mono); }
+.sidebar-nav { flex: 1; padding: 12px 0; overflow-y: auto; }
+.nav-label { font-size: 10px; font-family: var(--mono); color: var(--text3); text-transform: uppercase; letter-spacing: 1.2px; padding: 12px 20px 6px; font-weight: 500; }
+.nav-item { display: flex; align-items: center; gap: 10px; padding: 9px 20px; cursor: pointer; color: var(--text2); font-size: 13px; font-weight: 500; transition: all 0.15s; margin: 1px 10px; border-radius: 8px; }
+.nav-item:hover { background: var(--surface2); color: var(--text); }
+.nav-item.active { background: var(--accent-bg); color: var(--accent); }
+.nav-item .icon { font-size: 15px; width: 20px; text-align: center; flex-shrink: 0; }
+.back-catalog { padding: 12px 18px; border-top: 1px solid var(--border); }
+.back-catalog button { width: 100%; padding: 9px 14px; background: var(--surface2); border: 1.5px solid var(--border); border-radius: 9px; font-family: var(--font); font-size: 12.5px; font-weight: 600; color: var(--text2); cursor: pointer; transition: all 0.15s; display: flex; align-items: center; gap: 7px; justify-content: center; }
+.back-catalog button:hover { background: #e4e9f2; color: var(--text); }
+.sidebar-footer { padding: 10px 18px; font-size: 11px; color: var(--text3); font-family: var(--mono); border-top: 1px solid var(--border); }
+.overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.3); z-index: 150; }
+.overlay.show { display: block; }
+.main { margin-left: var(--sidebar); flex: 1; display: flex; flex-direction: column; min-height: 100vh; }
+.topbar { background: var(--surface); border-bottom: 1px solid var(--border); padding: 13px 26px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; gap: 12px; }
+.topbar-left { display: flex; align-items: center; gap: 10px; }
+.hamburger { display: none; background: none; border: 1px solid var(--border); border-radius: 7px; padding: 6px 9px; cursor: pointer; font-size: 15px; color: var(--text2); }
+.topbar-title { font-size: 15px; font-weight: 700; color: var(--text); }
+.topbar-right { display: flex; align-items: center; gap: 10px; }
+.topbar-badge { font-family: var(--mono); font-size: 11px; padding: 4px 12px; background: var(--accent-bg); color: var(--accent); border-radius: 20px; border: 1px solid rgba(59,110,248,0.2); font-weight: 500; }
+.db-dot { width: 8px; height: 8px; border-radius: 50%; background: #10b981; box-shadow: 0 0 0 2px #d1fae5; }
+.content { padding: 22px 26px; max-width: 840px; width: 100%; }
+
+.pill-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 22px; }
+.module-pill { display: inline-flex; align-items: center; gap: 6px; padding: 7px 15px; border-radius: 20px; font-size: 12px; font-weight: 600; cursor: pointer; border: 1.5px solid var(--border); color: var(--text2); background: var(--surface); transition: all 0.15s; box-shadow: var(--shadow-sm); }
+.module-pill.active { border-color: var(--accent); color: var(--accent); background: var(--accent-bg); }
+.module-pill:hover:not(.active) { border-color: var(--border2); background: var(--surface2); }
+.module-pill.add-pill { border-style: dashed; color: var(--text3); }
+.module-pill.add-pill:hover { color: var(--accent); border-color: var(--accent); background: var(--accent-bg); }
+
+.section-block { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 18px; overflow: hidden; box-shadow: var(--shadow); transition: box-shadow 0.2s; }
+.section-block:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.08), 0 6px 24px rgba(0,0,0,0.05); }
+.section-header { padding: 14px 18px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); cursor: pointer; user-select: none; background: var(--surface); transition: background 0.15s; }
+.section-header:hover { background: var(--surface2); }
+.section-header-left { display: flex; align-items: center; gap: 12px; }
+.section-icon { width: 34px; height: 34px; border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 16px; background: var(--accent-bg); flex-shrink: 0; }
+.section-title { font-size: 13.5px; font-weight: 700; color: var(--text); }
+.section-subtitle { font-size: 11px; color: var(--text3); font-family: var(--mono); margin-top: 1px; }
+.chevron { color: var(--text3); font-size: 11px; transition: transform 0.2s; font-style: normal; }
+.section-body { padding: 20px; }
+.section-body.hidden { display: none; }
+
+label { display: block; font-size: 11px; font-weight: 600; font-family: var(--mono); color: var(--text2); text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 6px; }
+input[type="text"], input[type="url"], textarea, select { width: 100%; background: var(--bg); border: 1.5px solid var(--border); border-radius: 9px; color: var(--text); font-family: var(--font); font-size: 13px; padding: 9px 13px; transition: all 0.15s; outline: none; resize: vertical; }
+input:focus, textarea:focus, select:focus { border-color: var(--accent); background: var(--surface); box-shadow: 0 0 0 3px rgba(59,110,248,0.1); }
+textarea { min-height: 85px; }
+.field { margin-bottom: 16px; }
+.hint { font-size: 11px; color: var(--text3); margin-top: 4px; font-family: var(--mono); }
+
+.btn-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px; }
+.btn { padding: 8px 16px; border-radius: 8px; border: none; font-family: var(--font); font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.15s; display: inline-flex; align-items: center; gap: 6px; }
+.btn:active { transform: scale(0.98); }
+.btn-primary { background: var(--accent); color: #fff; box-shadow: 0 1px 3px rgba(59,110,248,0.3); }
+.btn-primary:hover { background: var(--accent2); }
+.btn-danger  { background: var(--danger-bg); color: var(--danger); border: 1px solid rgba(220,38,38,0.2); }
+.btn-danger:hover  { background: #ffe4e4; }
+.btn-success { background: var(--success-bg); color: var(--success); border: 1px solid rgba(22,163,74,0.2); }
+.btn-success:hover { background: #dcfce7; }
+.btn-ghost   { background: var(--surface); color: var(--text2); border: 1.5px solid var(--border); }
+.btn-ghost:hover { background: var(--surface2); border-color: var(--border2); }
+
+.toast { position: fixed; bottom: 22px; right: 22px; padding: 11px 18px; border-radius: 10px; font-size: 13px; font-weight: 600; z-index: 9999; opacity: 0; transform: translateY(12px); transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1); pointer-events: none; box-shadow: 0 4px 20px rgba(0,0,0,0.12); display: flex; align-items: center; gap: 8px; max-width: 320px; }
+.toast.show { opacity: 1; transform: translateY(0); pointer-events: auto; }
+.toast.ok      { background: var(--success-bg); color: var(--success); border: 1px solid rgba(22,163,74,0.25); }
+.toast.err     { background: var(--danger-bg);  color: var(--danger);  border: 1px solid rgba(220,38,38,0.25); }
+.toast.loading { background: var(--accent-bg);  color: var(--accent);  border: 1px solid rgba(59,110,248,0.25); }
+
+.upload-zone { border: 2px dashed var(--border2); border-radius: 10px; padding: 26px 20px; text-align: center; cursor: pointer; transition: all 0.2s; margin-bottom: 12px; background: var(--bg); }
+.upload-zone:hover { border-color: var(--accent); background: var(--accent-bg); }
+.upload-zone input { display: none; }
+.upload-zone .u-icon { font-size: 26px; margin-bottom: 6px; }
+.upload-zone .u-text { font-size: 13px; color: var(--text2); font-weight: 500; }
+.upload-zone .u-hint { font-size: 11px; color: var(--text3); margin-top: 3px; font-family: var(--mono); }
+
+.progress-wrap { background: var(--surface2); border-radius: 8px; padding: 11px 13px; margin-bottom: 10px; }
+progress { width: 100%; height: 6px; border-radius: 6px; margin-top: 5px; accent-color: var(--accent); }
+.progress-label { font-size: 11px; color: var(--text2); font-family: var(--mono); }
+
+.video-preview-box { background: var(--surface2); border: 1px solid var(--border); border-radius: 9px; padding: 13px 15px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 13px; gap: 10px; }
+.video-name { font-family: var(--mono); font-size: 12px; color: var(--teal); font-weight: 500; }
+.video-path { font-size: 11px; color: var(--text3); margin-top: 2px; font-family: var(--mono); word-break: break-all; }
+
+.comment-item { background: var(--surface2); border: 1px solid var(--border); border-radius: 9px; padding: 10px 13px; margin-bottom: 7px; display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
+.comment-text { font-size: 13px; color: var(--text); flex: 1; line-height: 1.5; }
+.comment-meta { font-size: 11px; color: var(--text3); margin-top: 3px; font-family: var(--mono); }
+.comment-del { color: var(--text3); background: none; border: none; cursor: pointer; font-size: 18px; padding: 0 2px; opacity: 0.5; transition: all 0.15s; line-height: 1; }
+.comment-del:hover { opacity: 1; color: var(--danger); }
+
+.file-item { background: var(--surface2); border: 1px solid var(--border); border-radius: 9px; padding: 10px 13px; margin-bottom: 7px; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.file-icon { font-size: 20px; flex-shrink: 0; }
+.file-name  { font-weight: 600; font-size: 13px; color: var(--text); }
+.file-type  { font-size: 10px; color: var(--text3); font-family: var(--mono); text-transform: uppercase; margin-top: 2px; }
+.file-actions { display: flex; gap: 7px; flex-shrink: 0; }
+
+.empty-state { text-align: center; padding: 22px; color: var(--text3); font-size: 13px; font-family: var(--mono); background: var(--surface2); border: 1px dashed var(--border2); border-radius: 9px; margin-bottom: 12px; }
+.empty-icon { font-size: 22px; margin-bottom: 5px; }
+
+.divider { border: none; border-top: 1px solid var(--border); margin: 18px 0; }
+.steps-hint { font-size: 11px; color: var(--text3); font-family: var(--mono); margin-bottom: 5px; }
+.section-wrapper { animation: fadeIn 0.2s ease; }
+@keyframes fadeIn { from { opacity:0; transform:translateY(5px); } to { opacity:1; transform:translateY(0); } }
+
+@media (max-width: 768px) {
+  .sidebar { transform: translateX(-100%); width: 260px; }
+  .sidebar.open { transform: translateX(0); }
+  .main { margin-left: 0; }
+  .hamburger { display: flex; align-items: center; }
+  .content { padding: 16px 14px; }
+  .topbar { padding: 11px 14px; }
+  .btn-row { flex-direction: column; }
+  .cards-grid { grid-template-columns: 1fr; }
+  .search-box { flex-direction: column; }
+}
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 10px; }
+</style>
+</head>
+<body>
+
+<!-- KATALOG VIEW -->
+<div id="view-catalog">
+  <div class="cat-hero">
+    <h1>Kurslar katalogi <span>6 modul</span></h1>
+    <p>Har bir modul ichida: Kirish → Nazariya → Video → Slayd → Amaliy topshiriq → Test → Yakun.<br>Modulni tanlang va ichiga kiring.</p>
+    <div class="hero-steps">
+      <span class="step">📖 Kirish</span><span class="arr">→</span>
+      <span class="step">📚 Nazariya</span><span class="arr">→</span>
+      <span class="step">🎬 Video</span><span class="arr">→</span>
+      <span class="step">📊 Slayd</span><span class="arr">→</span>
+      <span class="step">✏️ Amaliy</span><span class="arr">→</span>
+      <span class="step">✅ Test</span><span class="arr">→</span>
+      <span class="step">🏆 Yakun</span>
+    </div>
+  </div>
+
+  <div class="search-wrap">
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="Modul qidirish: masalan 'GIS' yoki 'Topografiya'..." oninput="filterCards()">
+      <button class="sbtn sbtn-primary" onclick="filterCards()">🔍 Qidirish</button>
+      <button class="sbtn sbtn-ghost"   onclick="clearSearch()">✕ Tozalash</button>
+    </div>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat-pill">📦 Jami: <strong>6 modul</strong></div>
+    <div class="stat-pill">📗 Boshlang'ich: <strong>2 ta</strong></div>
+    <div class="stat-pill">📘 O'rta: <strong>3 ta</strong></div>
+    <div class="stat-pill">📕 Advanced: <strong>1 ta</strong></div>
+  </div>
+
+  <div class="grid-wrap">
+    <div class="grid-label" id="gridLabel">Barcha modullar — 6 ta</div>
+    <div class="cards-grid" id="cardsGrid">
+
+      <div class="cat-card" data-id="m1" data-keywords="topografiya masshtab koordinata relyef xarita">
+        <div class="cat-card-img">
+          <div class="thumb" style="background:linear-gradient(135deg,#4caf7d,#2e7d52)">🏔️</div>
+          <span class="badge boshlangich">Boshlang'ich</span>
+          <span class="mnum">1-modul</span>
+        </div>
+        <div class="cat-card-body">
+          <div class="ctitle">Topografiya asoslari</div>
+          <div class="cdesc">Masshtab, koordinata, relyef va topografik xarita bilan ishlash.</div>
+          <div class="cmeta"><span>⏱ 6 ta dars</span><span>📅 2 hafta</span></div>
+          <div class="card-actions">
+            <button class="ca-primary"   onclick="openAdmin('m1')">Kursga kirish →</button>
+            <button class="ca-secondary" onclick="openAdmin('m1')">Davom ettirish</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="cat-card" data-id="m2" data-keywords="kartografiya xarita proyeksiya generalizatsiya dizayn">
+        <div class="cat-card-img">
+          <div class="thumb" style="background:linear-gradient(135deg,#2196c4,#0d5a8a)">🧭</div>
+          <span class="badge orta">O'rta</span>
+          <span class="mnum">2-modul</span>
+        </div>
+        <div class="cat-card-body">
+          <div class="ctitle">Kartografiya</div>
+          <div class="cdesc">Xarita turlari, proyeksiyalar, generalizatsiya va dizayn.</div>
+          <div class="cmeta"><span>⏱ 6 ta dars</span><span>📅 2 hafta</span></div>
+          <div class="card-actions">
+            <button class="ca-primary"   onclick="openAdmin('m2')">Kursga kirish →</button>
+            <button class="ca-secondary" onclick="openAdmin('m2')">Davom ettirish</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="cat-card" data-id="m3" data-keywords="GIS ArcGIS QGIS vektor rastr qatlamlar fazoviy tahlil">
+        <div class="cat-card-img">
+          <div class="thumb" style="background:linear-gradient(135deg,#7c4dac,#4a2a7a)">🗺️</div>
+          <span class="badge orta">O'rta</span>
+          <span class="mnum">3-modul</span>
+        </div>
+        <div class="cat-card-body">
+          <div class="ctitle">GAT (GIS) — ArcGIS/QGIS</div>
+          <div class="cdesc">Vektor/rastr, qatlamlar, geoma'lumotlar, fazoviy tahlil.</div>
+          <div class="cmeta"><span>⏱ 8 ta dars</span><span>📅 3 hafta</span></div>
+          <div class="card-actions">
+            <button class="ca-primary"   onclick="openAdmin('m3')">Kursga kirish →</button>
+            <button class="ca-secondary" onclick="openAdmin('m3')">Davom ettirish</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="cat-card" data-id="m4" data-keywords="masofadan zondlash sun'iy yo'ldosh NDVI monitoring">
+        <div class="cat-card-img">
+          <div class="thumb" style="background:linear-gradient(135deg,#1a3a6e,#0a1e40)">🛰️</div>
+          <span class="badge orta">O'rta</span>
+          <span class="mnum">4-modul</span>
+        </div>
+        <div class="cat-card-body">
+          <div class="ctitle">Masofadan zondlash</div>
+          <div class="cdesc">Sun'iy yo'ldosh tasvirlari, tasniflash, NDVI va monitoring.</div>
+          <div class="cmeta"><span>⏱ 6 ta dars</span><span>📅 2 hafta</span></div>
+          <div class="card-actions">
+            <button class="ca-primary"   onclick="openAdmin('m4')">Kursga kirish →</button>
+            <button class="ca-secondary" onclick="openAdmin('m4')">Davom ettirish</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="cat-card" data-id="m5" data-keywords="kadastr geodeziya yer uchastkasi o'lchash hujjatlar">
+        <div class="cat-card-img">
+          <div class="thumb" style="background:linear-gradient(135deg,#c47a1a,#8a5010)">🏗️</div>
+          <span class="badge boshlangich">Boshlang'ich</span>
+          <span class="mnum">5-modul</span>
+        </div>
+        <div class="cat-card-body">
+          <div class="ctitle">Kadastr va geodeziya</div>
+          <div class="cdesc">Yer uchastkasi, o'lchash, kadastr hujjatlari bilan ishlash.</div>
+          <div class="cmeta"><span>⏱ 6 ta dars</span><span>📅 2 hafta</span></div>
+          <div class="card-actions">
+            <button class="ca-primary"   onclick="openAdmin('m5')">Kursga kirish →</button>
+            <button class="ca-secondary" onclick="openAdmin('m5')">Davom ettirish</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="cat-card" data-id="m6" data-keywords="amaliy loyiha ma'lumot yig'ish tahlil xarita hisobot">
+        <div class="cat-card-img">
+          <div class="thumb" style="background:linear-gradient(135deg,#2e7d4a,#1a4a28)">📐</div>
+          <span class="badge advanced">Advanced</span>
+          <span class="mnum">6-modul</span>
+        </div>
+        <div class="cat-card-body">
+          <div class="ctitle">Amaliy loyiha</div>
+          <div class="cdesc">Real loyiha: ma'lumot yig'ish → tahlil → xarita → hisobot.</div>
+          <div class="cmeta"><span>⏱ 10 ta dars</span><span>📅 4 hafta</span></div>
+          <div class="card-actions">
+            <button class="ca-primary"   onclick="openAdmin('m6')">Kursga kirish →</button>
+            <button class="ca-secondary" onclick="openAdmin('m6')">Davom ettirish</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="no-result" id="noResult">🔍 Hech narsa topilmadi.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN VIEW -->
+<div id="view-admin">
+<div class="overlay" id="overlay" onclick="closeSidebar()"></div>
+<div class="admin-wrap">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon">🌍</div>
+      <div class="logo-text">
+        <span>GeoGAT Admin</span>
+        <small>Modul boshqaruvi</small>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-label">Kontent</div>
+      <div class="nav-item active" data-section="kirish"   onclick="showSection('kirish',   this)"><span class="icon">🚀</span> Kirish</div>
+      <div class="nav-item"        data-section="nazariya" onclick="showSection('nazariya', this)"><span class="icon">📖</span> Nazariya</div>
+      <div class="nav-item"        data-section="video"    onclick="showSection('video',    this)"><span class="icon">🎬</span> Video dars</div>
+      <div class="nav-item"        data-section="slaydlar" onclick="showSection('slaydlar', this)"><span class="icon">📑</span> Slaydlar</div>
+      <div class="nav-item"        data-section="amaliy"   onclick="showSection('amaliy',   this)"><span class="icon">✏️</span> Amaliy topshiriq</div>
+      <div class="nav-item"        data-section="yakun"    onclick="showSection('yakun',    this)"><span class="icon">🏁</span> Yakun</div>
+      <div class="nav-label">Tizim</div>
+      <div class="nav-item"        data-section="fayllar"  onclick="showSection('fayllar',  this)"><span class="icon">📁</span> Modul fayllari</div>
+    </nav>
+    <div class="back-catalog">
+      <button onclick="backToCatalog()">← Katalogga qaytish</button>
+    </div>
+    <div class="sidebar-footer">v1.0 · Firebase</div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div class="topbar-left">
+        <button class="hamburger" onclick="toggleSidebar()">☰</button>
+        <div class="topbar-title" id="topbar-title">Kirish bo'limi</div>
+      </div>
+      <div class="topbar-right">
+        <div class="db-dot" id="db-status" title="Firebase"></div>
+        <div class="topbar-badge" id="module-indicator">m1</div>
+      </div>
+    </div>
+
+    <div class="content">
+      <!-- MODULE PILLS -->
+      <div class="pill-row" id="module-pills">
+        <span class="module-pill active" data-module="m1" onclick="selectModule('m1',this)">📦 Modul 1</span>
+        <span class="module-pill"        data-module="m2" onclick="selectModule('m2',this)">📦 Modul 2</span>
+        <span class="module-pill"        data-module="m3" onclick="selectModule('m3',this)">📦 Modul 3</span>
+        <span class="module-pill"        data-module="m4" onclick="selectModule('m4',this)">📦 Modul 4</span>
+        <span class="module-pill"        data-module="m5" onclick="selectModule('m5',this)">📦 Modul 5</span>
+        <span class="module-pill"        data-module="m6" onclick="selectModule('m6',this)">📦 Modul 6</span>
+        <span class="module-pill add-pill" onclick="addNewModule()">＋ Yangi</span>
+      </div>
+
+      <!-- KIRISH -->
+      <div id="sec-kirish" class="section-wrapper">
+        <div class="section-block">
+          <div class="section-header" onclick="toggle('kirish-body',this)">
+            <div class="section-header-left">
+              <div class="section-icon">🚀</div>
+              <div><div class="section-title">Kirish bo'limi</div><div class="section-subtitle">modules/{id}/sections/intro</div></div>
+            </div>
+            <i class="chevron">▼</i>
+          </div>
+          <div id="kirish-body" class="section-body">
+            <div class="field"><label>Maqsad</label><textarea id="k-maqsad" placeholder="Topografiya bo'yicha asosiy tushunchalarni o'rganish"></textarea></div>
+            <div class="field"><label>Kimlar uchun</label><textarea id="k-kimlar" placeholder="Talaba / o'qituvchi / mutaxassis"></textarea></div>
+            <div class="field"><label>Natija</label><textarea id="k-natija" placeholder="Nazariya + amaliy ko'nikma"></textarea></div>
+            <div class="btn-row">
+              <button class="btn btn-primary" onclick="saveKirish()">💾 Saqlash</button>
+              <button class="btn btn-ghost"   onclick="loadKirish()">↺ Yangilash</button>
+              <button class="btn btn-danger"  onclick="deleteSectionData('intro')">🗑 O'chirish</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- NAZARIYA -->
+      <div id="sec-nazariya" class="section-wrapper" style="display:none">
+        <div class="section-block">
+          <div class="section-header" onclick="toggle('naz-body',this)">
+            <div class="section-header-left">
+              <div class="section-icon">📖</div>
+              <div><div class="section-title">Nazariya</div><div class="section-subtitle">modules/{id}/sections/nazariya</div></div>
+            </div>
+            <i class="chevron">▼</i>
+          </div>
+          <div id="naz-body" class="section-body">
+            <div class="field">
+              <label>Bullet pointlar</label>
+              <div class="steps-hint">Har bir qator alohida bullet bo'ladi</div>
+              <textarea id="naz-points" rows="5" placeholder="Topografiya asosiy tushunchalari&#10;Misollar va izohlar&#10;Amaliyotga tayyorlov"></textarea>
+            </div>
+            <div class="field"><label>Izoh matni</label><input type="text" id="naz-izoh" placeholder="Nazariya matni..."/></div>
+            <div class="btn-row">
+              <button class="btn btn-primary" onclick="saveNazariya()">💾 Saqlash</button>
+              <button class="btn btn-ghost"   onclick="loadNazariya()">↺ Yangilash</button>
+              <button class="btn btn-danger"  onclick="deleteSectionData('nazariya')">🗑 O'chirish</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- VIDEO -->
+      <div id="sec-video" class="section-wrapper" style="display:none">
+        <div class="section-block">
+          <div class="section-header" onclick="toggle('vid-body',this)">
+            <div class="section-header-left">
+              <div class="section-icon">🎬</div>
+              <div><div class="section-title">Video dars</div><div class="section-subtitle">modules/{id}/sections/video + Storage</div></div>
+            </div>
+            <i class="chevron">▼</i>
+          </div>
+          <div id="vid-body" class="section-body">
+            <div id="video-current" style="display:none">
+              <label>Joriy video</label>
+              <div class="video-preview-box">
+                <div style="flex:1;min-width:0">
+                  <div class="video-name" id="vid-current-name">—</div>
+                  <div class="video-path" id="vid-current-path">—</div>
+                </div>
+                <button class="btn btn-danger" onclick="deleteVideo()">🗑 O'chirish</button>
+              </div>
+            </div>
+            <label>Yangi video yuklash</label>
+            <div class="upload-zone" onclick="document.getElementById('vid-file').click()">
+              <input type="file" id="vid-file" accept="video/*" onchange="onVideoSelect(event)">
+              <div class="u-icon">🎬</div>
+              <div class="u-text">Video tanlash uchun bosing</div>
+              <div class="u-hint">MP4, MOV, AVI · max 500MB</div>
+            </div>
+            <div class="progress-wrap" id="vid-progress-wrap" style="display:none">
+              <div class="progress-label" id="vid-progress-text">Yuklanmoqda...</div>
+              <progress id="vid-progress" value="0" max="100"></progress>
+            </div>
+            <div class="btn-row" style="margin-bottom:18px">
+              <button class="btn btn-primary" onclick="uploadVideo()" id="vid-upload-btn" disabled>⬆ Yuklash</button>
+            </div>
+            <hr class="divider">
+            <label>Commentlar</label>
+            <div id="comments-list" style="margin-bottom:10px"></div>
+            <div class="field"><input type="text" id="new-comment" placeholder="Yangi comment matni..." onkeydown="if(event.key==='Enter') addComment()"/></div>
+            <div class="btn-row">
+              <button class="btn btn-success" onclick="addComment()">💬 Qo'shish</button>
+              <button class="btn btn-ghost"   onclick="loadVideo()">↺ Yangilash</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLAYDLAR -->
+      <div id="sec-slaydlar" class="section-wrapper" style="display:none">
+        <div class="section-block">
+          <div class="section-header" onclick="toggle('slayd-body',this)">
+            <div class="section-header-left">
+              <div class="section-icon">📑</div>
+              <div><div class="section-title">Slaydlar / Fayllar</div><div class="section-subtitle">modules/{id}/files/ + Storage</div></div>
+            </div>
+            <i class="chevron">▼</i>
+          </div>
+          <div id="slayd-body" class="section-body">
+            <label>Mavjud fayllar</label>
+            <div id="files-list" style="margin-bottom:14px"></div>
+            <label>Yangi fayl yuklash</label>
+            <div class="upload-zone" onclick="document.getElementById('doc-file').click()">
+              <input type="file" id="doc-file" accept=".pdf,.pptx,.ppt,.doc,.docx" onchange="onDocSelect(event)">
+              <div class="u-icon">📄</div>
+              <div class="u-text">Fayl tanlash uchun bosing</div>
+              <div class="u-hint">PDF, PPTX, DOCX</div>
+            </div>
+            <div class="field"><label>Fayl nomi</label><input type="text" id="doc-name" placeholder="Modul-1 slaydlari"/></div>
+            <div class="progress-wrap" id="doc-progress-wrap" style="display:none">
+              <div class="progress-label" id="doc-progress-text">Yuklanmoqda...</div>
+              <progress id="doc-progress" value="0" max="100"></progress>
+            </div>
+            <div class="btn-row">
+              <button class="btn btn-primary" onclick="uploadDoc()" id="doc-upload-btn" disabled>⬆ Yuklash</button>
+              <button class="btn btn-ghost"   onclick="loadFiles()">↺ Yangilash</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AMALIY -->
+      <div id="sec-amaliy" class="section-wrapper" style="display:none">
+        <div class="section-block">
+          <div class="section-header" onclick="toggle('amaliy-body',this)">
+            <div class="section-header-left">
+              <div class="section-icon">✏️</div>
+              <div><div class="section-title">Amaliy topshiriq</div><div class="section-subtitle">modules/{id}/sections/amaliy</div></div>
+            </div>
+            <i class="chevron">▼</i>
+          </div>
+          <div id="amaliy-body" class="section-body">
+            <div class="field">
+              <label>Qadamlar</label>
+              <div class="steps-hint">Har bir qator = 1 qadam</div>
+              <textarea id="am-steps" rows="5" placeholder="Modul mavzusiga mos 3 ta mashq bajaring.&#10;Natijani saqlang."></textarea>
+            </div>
+            <div class="field"><label>Highlight matni</label><input type="text" id="am-highlight" placeholder="Topshiriq: 1 betlik hisobot + rasm."/></div>
+            <div class="btn-row">
+              <button class="btn btn-primary" onclick="saveAmaliy()">💾 Saqlash</button>
+              <button class="btn btn-ghost"   onclick="loadAmaliy()">↺ Yangilash</button>
+              <button class="btn btn-danger"  onclick="deleteSectionData('amaliy')">🗑 O'chirish</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- YAKUN -->
+      <div id="sec-yakun" class="section-wrapper" style="display:none">
+        <div class="section-block">
+          <div class="section-header" onclick="toggle('yakun-body',this)">
+            <div class="section-header-left">
+              <div class="section-icon">🏁</div>
+              <div><div class="section-title">Yakun</div><div class="section-subtitle">modules/{id}/sections/yakun</div></div>
+            </div>
+            <i class="chevron">▼</i>
+          </div>
+          <div id="yakun-body" class="section-body">
+            <div class="field"><label>Xulosa matni</label><textarea id="yak-xulosa" placeholder="Modul yakunida siz..."></textarea></div>
+            <div class="field"><label>Bold so'z</label><input type="text" id="yak-bold" placeholder="Topografiya"/></div>
+            <div class="btn-row">
+              <button class="btn btn-primary" onclick="saveYakun()">💾 Saqlash</button>
+              <button class="btn btn-ghost"   onclick="loadYakun()">↺ Yangilash</button>
+              <button class="btn btn-danger"  onclick="deleteSectionData('yakun')">🗑 O'chirish</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FAYLLAR -->
+      <div id="sec-fayllar" class="section-wrapper" style="display:none">
+        <div class="section-block">
+          <div class="section-header" onclick="toggle('fayl-body',this)">
+            <div class="section-header-left">
+              <div class="section-icon">📁</div>
+              <div><div class="section-title">Barcha modul fayllari</div><div class="section-subtitle">modules/{id}/files/ kolleksiya</div></div>
+            </div>
+            <i class="chevron">▼</i>
+          </div>
+          <div id="fayl-body" class="section-body">
+            <div id="all-files-list"></div>
+            <div class="btn-row"><button class="btn btn-ghost" onclick="loadFiles()">↺ Yangilash</button></div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /content -->
+  </main>
+</div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- ═══════════════════════════════════
+     KATALOG JS (vanilla, no module)
+═══════════════════════════════════ -->
+<script>
+// ── Katalog helpers
+function filterCards() {
+  const q = document.getElementById('searchInput').value.toLowerCase().trim();
+  const cards = document.querySelectorAll('.cat-card');
+  let visible = 0;
+  cards.forEach(c => {
+    const title = c.querySelector('.ctitle').textContent.toLowerCase();
+    const keys  = (c.dataset.keywords||'').toLowerCase();
+    const match = !q || title.includes(q) || keys.includes(q);
+    c.style.display = match ? '' : 'none';
+    if (match) visible++;
+  });
+  document.getElementById('noResult').style.display = visible === 0 ? 'block' : 'none';
+  document.getElementById('gridLabel').textContent =
+    q ? `"${q}" bo'yicha — ${visible} ta` : 'Barcha modullar — 6 ta';
+}
+function clearSearch() {
+  document.getElementById('searchInput').value = '';
+  filterCards();
+}
+
+// ── Admin/Catalog view switch
+function openAdmin(id) {
+  document.getElementById('view-catalog').style.display = 'none';
+  document.getElementById('view-admin').style.display   = 'block';
+  window.scrollTo(0, 0);
+  // pill ni active qilish
+  const pill = document.querySelector(`.module-pill[data-module="${id}"]`);
+  selectModule(id, pill);
+}
+function backToCatalog() {
+  document.getElementById('view-admin').style.display   = 'none';
+  document.getElementById('view-catalog').style.display = 'block';
+  window.scrollTo(0, 0);
+  closeSidebar();
+}
+
+// ── Sidebar helpers
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('overlay').classList.toggle('show');
+}
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('overlay').classList.remove('show');
+}
+
+// ── Section collapse
+function toggle(bodyId, header) {
+  const body = document.getElementById(bodyId);
+  const ch   = header.querySelector('.chevron');
+  const hidden = body.classList.toggle('hidden');
+  if (ch) ch.style.transform = hidden ? 'rotate(-90deg)' : '';
+}
+
+// ── Section titles
+const sectionTitles = {
+  kirish:   "Kirish bo'limi",
+  nazariya: "Nazariya",
+  video:    "Video dars",
+  slaydlar: "Slaydlar",
+  amaliy:   "Amaliy topshiriq",
+  yakun:    "Yakun",
+  fayllar:  "Modul fayllari"
+};
+
+// currentSection — qaysi bo'limda turganini bilish uchun
+let currentSection = 'kirish';
+
+function showSection(name, navEl) {
+  currentSection = name;
+  document.querySelectorAll('.section-wrapper').forEach(el => el.style.display = 'none');
+  const target = document.getElementById('sec-' + name);
+  if (target) target.style.display = 'block';
+  document.querySelectorAll('#view-admin .nav-item').forEach(el => el.classList.remove('active'));
+  if (navEl) navEl.classList.add('active');
+  document.getElementById('topbar-title').textContent = sectionTitles[name] || name;
+
+  // Firebase funksiyalarini modul yuklangandan keyin chaqirish
+  callSectionLoad(name);
+
+  if (window.innerWidth <= 768) closeSidebar();
+}
+
+// Firebase tayyor bo'lgunga qadar xavfsiz chaqirish
+function callSectionLoad(name) {
+  if (!window._fbReady) return; // Firebase hali yuklanmagan
+  switch (name) {
+    case 'kirish':   window.loadKirish   && window.loadKirish();   break;
+    case 'nazariya': window.loadNazariya && window.loadNazariya(); break;
+    case 'video':    window.loadVideo    && window.loadVideo();    break;
+    case 'slaydlar': window.loadFiles    && window.loadFiles();    break;
+    case 'amaliy':   window.loadAmaliy   && window.loadAmaliy();   break;
+    case 'yakun':    window.loadYakun    && window.loadYakun();    break;
+    case 'fayllar':  window.loadFiles    && window.loadFiles();    break;
+  }
+}
+
+// ── Module select
+function selectModule(id, el) {
+  window._moduleId = id; // global state — Firebase script ham shu o'zgaruvchini o'qiydi
+
+  document.getElementById('module-indicator').textContent = id;
+  document.querySelectorAll('.module-pill:not(.add-pill)').forEach(p => p.classList.remove('active'));
+  if (el) el.classList.add('active');
+
+  // joriy sectionni yangilash
+  callSectionLoad(currentSection);
+  toast(`Modul ${id} tanlandi`, 'ok', 1500);
+}
+window.selectModule = selectModule;
+
+function addNewModule() {
+  const input = prompt("Yangi modul ID (masalan: m7)");
+  if (!input) return;
+  const id  = input.trim().replace(/\s+/g,'').toLowerCase();
+  if (!id)   return;
+  const num = id.replace(/[^0-9]/g,'') || id;
+  const pill = document.createElement('span');
+  pill.className       = 'module-pill';
+  pill.dataset.module  = id;
+  pill.textContent     = `📦 Modul ${num}`;
+  pill.setAttribute('onclick', `selectModule('${id}', this)`);
+  const pillRow = document.getElementById('module-pills');
+  pillRow.insertBefore(pill, pillRow.lastElementChild);
+  selectModule(id, pill);
+}
+window.addNewModule = addNewModule;
+
+// ── Toast
+function toast(msg, type='ok', duration=3000) {
+  const el = document.getElementById('toast');
+  const icons = { ok:'✅', err:'❌', loading:'⏳' };
+  el.innerHTML = `<span>${icons[type]||''}</span> ${msg}`;
+  el.className = `toast ${type} show`;
+  clearTimeout(el._t);
+  if (type !== 'loading') el._t = setTimeout(() => el.classList.remove('show'), duration);
+}
+window.toast = toast;
+
+// İlk moduleId
+window._moduleId = 'm1';
+window._fbReady  = false;
+</script>
+
+
+<!-- ═══════════════════════════════════
+     FIREBASE  (ES module)
+═══════════════════════════════════ -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import {
+  getFirestore, doc, getDoc, setDoc, deleteDoc,
+  collection, getDocs, addDoc, serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import {
+  getStorage, ref, uploadBytesResumable, getDownloadURL, deleteObject
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
+
+// ╔══════════════════════════════════╗
+// ║   O'Z FIREBASE CONFIG INI QO'Y  ║
+// ╚══════════════════════════════════╝
+const firebaseConfig = {
+  apiKey: "AIzaSyDlKFVAteGjZ3pNnKsvMsubfvTZXOdgg3g",
+  authDomain: "sound-memory-474606-p1.firebaseapp.com",
+  projectId: "sound-memory-474606-p1",
+  storageBucket: "sound-memory-474606-p1.firebasestorage.app",
+  messagingSenderId: "1088934512143",
+  appId: "1:1088934512143:web:6c989350739ca36d75c57a",
+  measurementId: "G-N3VK50SCRN"
+};
+
+const app     = initializeApp(firebaseConfig);
+const db      = getFirestore(app);
+const storage = getStorage(app);
+
+// ── Har doim yangi moduleId ni olib ishlaydigan ref helper funksiyalar
+// Shu tufayli modul o'zgarganda eski ref eskirib qolmaydi
+const getModuleId  = ()         => window._moduleId || 'm1';
+const sectionRef   = (sec)      => doc(db, 'modules', getModuleId(), 'sections', sec);
+const filesColRef  = ()         => collection(db, 'modules', getModuleId(), 'files');
+const fileDocRef   = (fileId)   => doc(db, 'modules', getModuleId(), 'files', fileId);
+
+// Firebase tayyor
+window._fbReady = true;
+document.getElementById('db-status').style.background = '#10b981';
+document.getElementById('db-status').title = 'Firebase ulangan';
+
+// ── Util
+function esc(s) {
+  return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function formatBytes(b) {
+  return b < 1024 ? b+' B' : b < 1048576 ? (b/1024).toFixed(1)+' KB' : (b/1048576).toFixed(1)+' MB';
+}
+function fileIcon(t) {
+  const u = (t||'').toUpperCase();
+  if (u==='PDF')              return '📕';
+  if (u==='PPTX'||u==='PPT') return '📊';
+  if (u==='DOCX'||u==='DOC') return '📝';
+  return '📄';
+}
+
+// ════════════════════════════════
+// KIRISH
+// ════════════════════════════════
+async function loadKirish() {
+  try {
+    window.toast('Yuklanmoqda...', 'loading');
+    const snap = await getDoc(sectionRef('intro'));
+    if (snap.exists()) {
+      const d = snap.data();
+      document.getElementById('k-maqsad').value = d.maqsad || '';
+      document.getElementById('k-kimlar').value = d.kimlar || '';
+      document.getElementById('k-natija').value = d.natija || '';
+      window.toast('Kirish yuklandi');
+    } else {
+      document.getElementById('k-maqsad').value = '';
+      document.getElementById('k-kimlar').value = '';
+      document.getElementById('k-natija').value = '';
+      window.toast("Ma'lumot yo'q", 'err');
+    }
+  } catch(e) { window.toast(e.message, 'err'); }
+}
+
+async function saveKirish() {
+  try {
+    window.toast('Saqlanmoqda...', 'loading');
+    await setDoc(sectionRef('intro'), {
+      maqsad:    document.getElementById('k-maqsad').value.trim(),
+      kimlar:    document.getElementById('k-kimlar').value.trim(),
+      natija:    document.getElementById('k-natija').value.trim(),
+      updatedAt: serverTimestamp()
+    }, { merge: true });
+    window.toast('Kirish saqlandi ✓');
+  } catch(e) { window.toast(e.message, 'err'); }
+}
+
+// ════════════════════════════════
+// NAZARIYA
+// ════════════════════════════════
+async function loadNazariya() {
+  try {
+    window.toast('Yuklanmoqda...', 'loading');
+    const snap = await getDoc(sectionRef('nazariya'));
+    if (snap.exists()) {
+      const d = snap.data();
+      document.getElementById('naz-points').value = (d.points || []).join('\n');
+      document.getElementById('naz-izoh').value   = d.izoh || '';
+      window.toast('Nazariya yuklandi');
+    } else {
+      document.getElementById('naz-points').value = '';
+      document.getElementById('naz-izoh').value   = '';
+      window.toast("Ma'lumot yo'q", 'err');
+    }
+  } catch(e) { window.toast(e.message, 'err'); }
+}
+
+async function saveNazariya() {
+  try {
+    window.toast('Saqlanmoqda...', 'loading');
+    const points = document.getElementById('naz-points').value
+      .split('\n').map(s => s.trim()).filter(Boolean);
+    await setDoc(sectionRef('nazariya'), {
+      points,
+      izoh:      document.getElementById('naz-izoh').value.trim(),
+      updatedAt: serverTimestamp()
+    }, { merge: true });
+    window.toast('Nazariya saqlandi ✓');
+  } catch(e) { window.toast(e.message, 'err'); }
+}
+
+// ════════════════════════════════
+// VIDEO
+// ════════════════════════════════
+let selectedVideoFile = null;
+
+function onVideoSelect(e) {
+  selectedVideoFile = e.target.files[0];
+  document.getElementById('vid-upload-btn').disabled = !selectedVideoFile;
+}
+
+async function loadVideo() {
+  try {
+    const snap = await getDoc(sectionRef('video'));
+    if (snap.exists()) {
+      const d = snap.data();
+      if (d.videoUrl) {
+        document.getElementById('video-current').style.display = 'block';
+        document.getElementById('vid-current-name').textContent = d.videoName || 'video';
+        document.getElementById('vid-current-path').textContent = d.storagePath || '';
+      } else {
+        document.getElementById('video-current').style.display = 'none';
+      }
+      renderComments(d.comments || []);
+    } else {
+      document.getElementById('video-current').style.display = 'none';
+      renderComments([]);
+    }
+  } catch(e) { window.toast(e.message, 'err'); }
+}
+
+function renderComments(comments) {
+  const list = document.getElementById('comments-list');
+  if (!comments.length) {
+    list.innerHTML = '<div class="empty-state"><div class="empty-icon">💬</div>Comment yo\'q</div>';
+    return;
+  }
+  list.innerHTML = comments.map((c, i) => `
+    <div class="comment-item">
+      <div style="flex:1;min-width:0">
+        <div class="comment-text">${esc(c.text)}</div>
+        <div class="comment-meta">${esc(c.date || '')}</div>
+      </div>
+      <button class="comment-del" onclick="window._removeComment(${i})">×</button>
+    </div>`).join('');
+}
+
+async function addComment() {
+  const val = document.getElementById('new-comment').value.trim();
+  if (!val) return;
+  try {
+    window.toast('Saqlanmoqda...', 'loading');
+    const snap    = await getDoc(sectionRef('video'));
+    const existing = snap.exists() ? (snap.data().comments || []) : [];
+    existing.push({
+      text: val,
+      date: new Date().toLocaleDateString('uz-UZ', { year:'numeric', month:'long', day:'numeric' })
+    });
+    await setDoc(sectionRef('video'), { comments: existing }, { merge: true });
+    document.getElementById('new-comment').value = '';
+    renderComments(existing);
+    window.toast("Comment qo'shildi");
+  } catch(e) { window.toast(e.message, 'err'); }
+}
+
+// window._removeComment — onclick ichida chaqiriladi
+window._removeComment = async (idx) => {
+  try {
+    const snap     = await getDoc(sectionRef('video'));
+    const comments = snap.exists() ? (snap.data().comments || []) : [];
+    comments.splice(idx, 1);
+    await setDoc(sectionRef('video'), { comments }, { merge: true });
+    renderComments(comments);
+    window.toast("Comment o'chirildi");
+  } catch(e) { window.toast(e.message, 'err'); }
+};
+
+function uploadVideo() {
+  if (!selectedVideoFile) return;
+  const mid  = getModuleId();
+  const path = `videos/${mid}/${Date.now()}_${selectedVideoFile.name}`;
+  const task = uploadBytesResumable(ref(storage, path), selectedVideoFile);
+
+  document.getElementById('vid-progress-wrap').style.display = 'block';
+  document.getElementById('vid-upload-btn').disabled = true;
+  window.toast('Video yuklanmoqda...', 'loading', 999999);
+
+  task.on('state_changed',
+    (snap) => {
+      const pct = Math.round(snap.bytesTransferred / snap.totalBytes * 100);
+      document.getElementById('vid-progress').value = pct;
+      document.getElementById('vid-progress-text').textContent =
+        `${pct}% — ${formatBytes(snap.bytesTransferred)} / ${formatBytes(snap.totalBytes)}`;
+    },
+    (err) => { window.toast(err.message, 'err'); },
+    async () => {
+      const url = await getDownloadURL(task.snapshot.ref);
+      await setDoc(sectionRef('video'), {
+        videoUrl:    url,
+        videoName:   selectedVideoFile.name,
+        storagePath: path,
+        updatedAt:   serverTimestamp()
+      }, { merge: true });
+      document.getElementById('vid-progress-wrap').style.display = 'none';
+      document.getElementById('vid-current-name').textContent = selectedVideoFile.name;
+      document.getElementById('vid-current-path').textContent = path;
+      document.getElementById('video-current').style.display  = 'block';
+      selectedVideoFile = null;
+      document.getElementById('vid-upload-btn').disabled = true;
+      window.toast('Video yuklandi ✓');
+    }
+  );
+}
+
+async function deleteVideo() {
+  if (!confirm("Videoni o'chirishni tasdiqlaysizmi?")) return;
+  try {
+    window.toast("O'chirilmoqda...", 'loading');
+    const snap = await getDoc(sectionRef('video'));
+    if (snap.exists() && snap.data().storagePath) {
+      await deleteObject(ref(storage, snap.data().storagePath)).catch(() => {});
+    }
+    await setDoc(sectionRef('video'), {
+      videoUrl: null, videoName: null, storagePath: null, updatedAt: serverTimestamp()
+    }, { merge: true });
+    document.getElementById('video-current').style.display = 'none';
+    window.toast("Video o'chirildi");
+  } catch(e) { window.toast(e.message, 'err'); }
+}
+
+// ════════════════════════════════
+// FAYLLAR (Slaydlar)
+// ════════════════════════════════
+let selectedDocFile = null;
+
+function onDocSelect(e) {
+  selectedDocFile = e.target.files[0];
+  document.getElementById('doc-upload-btn').disabled = !selectedDocFile;
+  if (selectedDocFile && !document.getElementById('doc-name').value) {
+    document.getElementById('doc-name').value = selectedDocFile.name.replace(/\.[^.]+$/, '');
+  }
+}
+
+async function loadFiles() {
+  try {
+    const snap  = await getDocs(filesColRef());
+    const files = [];
+    snap.forEach(d => files.push({ id: d.id, ...d.data() }));
+    renderFileList('files-list',     files);
+    renderFileList('all-files-list', files);
+  } catch(e) { window.toast(e.message, 'err'); }
+}
+
+function renderFileList(containerId, files) {
+  const el = document.getElementById(containerId);
+  if (!el) return;
+  if (!files.length) {
+    el.innerHTML = '<div class="empty-state"><div class="empty-icon">📁</div>Fayllar yo\'q</div>';
+    return;
+  }
+  el.innerHTML = files.map(f => `
+    <div class="file-item">
+      <div style="display:flex;align-items:center;gap:12px;flex:1;min-width:0">
+        <div class="file-icon">${fileIcon(f.type)}</div>
+        <div>
+          <div class="file-name">${esc(f.name)}</div>
+          <div class="file-type">${esc(f.type || '')}</div>
+        </div>
+      </div>
+      <div class="file-actions">
+        <a href="${esc(f.url)}" target="_blank" class="btn btn-ghost" style="padding:6px 10px;font-size:12px;text-decoration:none">🔗</a>
+        <button class="btn btn-danger" style="padding:6px 10px;font-size:12px"
+          onclick="window._deleteFile('${esc(f.id)}','${esc(f.storagePath||'')}')">🗑</button>
+      </div>
+    </div>`).join('');
+}
+
+function uploadDoc() {
+  if (!selectedDocFile) return;
+  const mid  = getModuleId();
+  const name = document.getElementById('doc-name').value.trim() || selectedDocFile.name;
+  const ext  = selectedDocFile.name.split('.').pop().toUpperCase();
+  const path = `docs/${mid}/${Date.now()}_${selectedDocFile.name}`;
+  const task = uploadBytesResumable(ref(storage, path), selectedDocFile);
+
+  document.getElementById('doc-progress-wrap').style.display = 'block';
+  document.getElementById('doc-upload-btn').disabled = true;
+  window.toast('Fayl yuklanmoqda...', 'loading', 999999);
+
+  task.on('state_changed',
+    (snap) => {
+      const pct = Math.round(snap.bytesTransferred / snap.totalBytes * 100);
+      document.getElementById('doc-progress').value = pct;
+      document.getElementById('doc-progress-text').textContent = `${pct}%`;
+    },
+    (err) => { window.toast(err.message, 'err'); },
+    async () => {
+      const url = await getDownloadURL(task.snapshot.ref);
+      await addDoc(filesColRef(), {
+        name,
+        url,
+        storagePath: path,
+        type:        ext,
+        uploadedAt:  serverTimestamp()
+      });
+      document.getElementById('doc-progress-wrap').style.display = 'none';
+      selectedDocFile = null;
+      document.getElementById('doc-upload-btn').disabled = true;
+      document.getElementById('doc-name').value = '';
+      document.getElementById('doc-file').value = '';
+      await loadFiles();
+      window.toast(`${name} yuklandi ✓`);
+    }
+  );
+}
+
+// window._deleteFile — onclick ichida chaqiriladi
+window._deleteFile = async (fileId, storagePath) => {
+  if (!confirm("Faylni o'chirishni tasdiqlaysizmi?")) return;
+  try {
+    window.toast("O'chirilmoqda...", 'loading');
+    if (storagePath) await deleteObject(ref(storage, storagePath)).catch(() => {});
+    await deleteDoc(fileDocRef(fileId));
+    await loadFiles();
+    window.toast("Fayl o'chirildi");
+  } catch(e) { window.toast(e.message, 'err'); }
+};
+
+// ════════════════════════════════
+// AMALIY
+// ════════════════════════════════
+async function loadAmaliy() {
+  try {
+    window.toast('Yuklanmoqda...', 'loading');
+    const snap = await getDoc(sectionRef('amaliy'));
+    if (snap.exists()) {
+      const d = snap.data();
+      document.getElementById('am-steps').value     = (d.steps || []).join('\n');
+      document.getElementById('am-highlight').value = d.highlight || '';
+      window.toast('Amaliy yuklandi');
+    } else {
+      document.getElementById('am-steps').value     = '';
+      document.getElementById('am-highlight').value = '';
+      window.toast("Ma'lumot yo'q", 'err');
+    }
+  } catch(e) { window.toast(e.message, 'err'); }
+}
+
+async function saveAmaliy() {
+  try {
+    window.toast('Saqlanmoqda...', 'loading');
+    const steps = document.getElementById('am-steps').value
+      .split('\n').map(s => s.trim()).filter(Boolean);
+    await setDoc(sectionRef('amaliy'), {
+      steps,
+      highlight: document.getElementById('am-highlight').value.trim(),
+      updatedAt: serverTimestamp()
+    }, { merge: true });
+    window.toast('Amaliy saqlandi ✓');
+  } catch(e) { window.toast(e.message, 'err'); }
+}
+
+// ════════════════════════════════
+// YAKUN
+// ════════════════════════════════
+async function loadYakun() {
+  try {
+    window.toast('Yuklanmoqda...', 'loading');
+    const snap = await getDoc(sectionRef('yakun'));
+    if (snap.exists()) {
+      const d = snap.data();
+      document.getElementById('yak-xulosa').value = d.xulosa  || '';
+      document.getElementById('yak-bold').value   = d.fanBold || '';
+      window.toast('Yakun yuklandi');
+    } else {
+      document.getElementById('yak-xulosa').value = '';
+      document.getElementById('yak-bold').value   = '';
+      window.toast("Ma'lumot yo'q", 'err');
+    }
+  } catch(e) { window.toast(e.message, 'err'); }
+}
+
+async function saveYakun() {
+  try {
+    window.toast('Saqlanmoqda...', 'loading');
+    await setDoc(sectionRef('yakun'), {
+      xulosa:    document.getElementById('yak-xulosa').value.trim(),
+      fanBold:   document.getElementById('yak-bold').value.trim(),
+      updatedAt: serverTimestamp()
+    }, { merge: true });
+    window.toast('Yakun saqlandi ✓');
+  } catch(e) { window.toast(e.message, 'err'); }
+}
+
+// ════════════════════════════════
+// SECTION O'CHIRISH
+// ════════════════════════════════
+async function deleteSectionData(sec) {
+  const names = { intro:'Kirish', nazariya:'Nazariya', amaliy:'Amaliy', yakun:'Yakun' };
+  if (!confirm(`"${names[sec]||sec}" ma'lumotlarini o'chirishni tasdiqlaysizmi?`)) return;
+  try {
+    window.toast("O'chirilmoqda...", 'loading');
+    await deleteDoc(sectionRef(sec));
+    // Formani tozalash
+    const fieldMap = {
+      intro:    ['k-maqsad','k-kimlar','k-natija'],
+      nazariya: ['naz-points','naz-izoh'],
+      amaliy:   ['am-steps','am-highlight'],
+      yakun:    ['yak-xulosa','yak-bold']
+    };
+    (fieldMap[sec] || []).forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.value = '';
+    });
+    window.toast(`${names[sec]||sec} o'chirildi`);
+  } catch(e) { window.toast(e.message, 'err'); }
+}
+
+// ════════════════════════════════
+// window.* ga export — HTML onclick lar uchun
+// ════════════════════════════════
+window.loadKirish    = loadKirish;
+window.saveKirish    = saveKirish;
+window.loadNazariya  = loadNazariya;
+window.saveNazariya  = saveNazariya;
+window.loadVideo     = loadVideo;
+window.onVideoSelect = onVideoSelect;
+window.uploadVideo   = uploadVideo;
+window.deleteVideo   = deleteVideo;
+window.addComment    = addComment;
+window.onDocSelect   = onDocSelect;
+window.loadFiles     = loadFiles;
+window.uploadDoc     = uploadDoc;
+window.loadAmaliy    = loadAmaliy;
+window.saveAmaliy    = saveAmaliy;
+window.loadYakun     = loadYakun;
+window.saveYakun     = saveYakun;
+window.deleteSectionData = deleteSectionData;
+
+// ── Auto-load: Firebase tayyor bo'lgandan keyin
+window._fbReady = true;
+loadKirish();
+loadFiles();
+</script>
+
+</body>
+</html>

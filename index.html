@@ -1,0 +1,560 @@
+<!doctype html>
+<html lang="uz">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>GeoGAT Akademiya</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    /* ── User chip + Logout ── */
+    .userChip {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+ 
+    .userAvatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #0066cc, #00b4d8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 13px;
+      color: #fff;
+      flex-shrink: 0;
+      box-shadow: 0 2px 8px rgba(0,100,200,0.35);
+      font-family: 'Segoe UI', sans-serif;
+    }
+ 
+    .userName {
+      font-size: 13px;
+      font-weight: 600;
+      color: #e8f0ff;
+      max-width: 130px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+ 
+    .logoutBtn {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 6px 14px;
+      border-radius: 8px;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.18);
+      color: #e8f0ff;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.2s, border-color 0.2s, transform 0.15s;
+      font-family: 'Segoe UI', sans-serif;
+      white-space: nowrap;
+    }
+ 
+    .logoutBtn:hover {
+      background: rgba(255,80,80,0.22);
+      border-color: rgba(255,100,100,0.4);
+      color: #ffcdd2;
+      transform: translateY(-1px);
+    }
+ 
+    .logoutBtn svg {
+      flex-shrink: 0;
+    }
+ 
+    /* Divider between nav links and user chip */
+    .menuNav .dividerLine {
+      width: 1px;
+      height: 20px;
+      background: rgba(255,255,255,0.2);
+      margin: 0 6px;
+    }
+ 
+    /* Auth states */
+    #userSection { display: none; }
+    #loginLink   { display: inline; }
+  </style>
+</head>
+ 
+<body>
+ 
+  <!-- TOP HEADER (oq) -->
+  <header class="topHeader">
+    <div class="wrap topHeaderFlex">
+      <div class="brandTop">
+        <div class="brandName">GeoGAT Akademiya</div>
+        <div class="brandDesc">Topografiya • Kartografiya • GAT (GIS) — onlayn trening</div>
+      </div>
+ 
+      <nav class="topLinks">
+        <a href="#">Mahsulotlar</a>
+        <a href="#">Sohalar</a>
+        <a href="#">Yordam</a>
+        <a href="#">Biz haqimizda</a>
+      </nav>
+    </div>
+  </header>
+ 
+  <!-- MENU BAR (kulrang) -->
+  <nav class="menuBar">
+    <div class="wrap menuFlex">
+      <div class="menuLeft">
+        <a class="homeBtn" href="index.html" title="Bosh sahifa">⌂</a>
+        <span class="menuTitle">GeoGAT Academy</span>
+      </div>
+ 
+      <div class="menuNav">
+        <a href="about.html">Fan haqida</a>
+        <a href="courses.html">Katalog</a>
+        <a href="#">Sertifikat</a>
+        <a href="#">Mening kurslarim</a>
+        <a href="#">Yordam</a>
+ 
+        <!-- Firebase yuklanguncha ko'rinadigan "Kirish" linki -->
+        <a href="login.html" id="loginLink">Kirish</a>
+ 
+        <!-- Divider -->
+        <span class="dividerLine"></span>
+ 
+        <!-- User chip + logout — Firebase yuklangach ko'rinadi -->
+        <div class="userChip" id="userSection">
+          <div class="userAvatar" id="userAvatar">?</div>
+          <span class="userName" id="userName">...</span>
+          <button class="logoutBtn" id="logoutBtn" onclick="doLogout()">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+              <polyline points="16 17 21 12 16 7"/>
+              <line x1="21" y1="12" x2="9" y2="12"/>
+            </svg>
+            Chiqish
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+ 
+  <!-- HERO SLIDER -->
+  <section class="hero" id="hero">
+ 
+    <!-- SLIDE 1 -->
+    <div class="slide active">
+      <img src="img/slide1.jpg" alt="Topografiya" />
+      <div class="heroOverlay"></div>
+      <div class="heroContent">
+        <div class="heroBox">
+          <h1>Topografiya</h1>
+          <p>Masshtab, koordinata, relyef va topografik xarita bilan ishlash bo'yicha amaliy trening.</p>
+          <a class="heroBtn" href="courses.html">Kursni ko'rish →</a>
+        </div>
+      </div>
+    </div>
+ 
+    <!-- SLIDE 2 -->
+    <div class="slide">
+      <img src="img/slide2.jpg" alt="Kartografiya" />
+      <div class="heroOverlay"></div>
+      <div class="heroContent">
+        <div class="heroBox">
+          <h1>Kartografiya</h1>
+          <p>Xarita turlari, proyeksiyalar, generalizatsiya va kartografik dizayn bo'yicha modul.</p>
+          <a class="heroBtn" href="courses.html">Kursni ko'rish →</a>
+        </div>
+      </div>
+    </div>
+ 
+    <!-- SLIDE 3 -->
+    <div class="slide">
+      <img src="img/slide3.jpg" alt="GAT GIS" />
+      <div class="heroOverlay"></div>
+      <div class="heroContent">
+        <div class="heroBox">
+          <h1>GAT (GIS)</h1>
+          <p>Rastr/vektor, geoma'lumotlar bazasi, fazoviy tahlil, 3D xaritalar va Smart City.</p>
+          <a class="heroBtn" href="courses.html">Kursni ko'rish →</a>
+        </div>
+      </div>
+    </div>
+ 
+    <!-- arrows -->
+    <button class="heroArrow prev" onclick="prevSlide()">‹</button>
+    <button class="heroArrow next" onclick="nextSlide()">›</button>
+ 
+    <!-- thumbs -->
+    <div class="thumbs" id="thumbs">
+      <button class="thumb active" onclick="goTo(0)">
+        <img src="img/slide1.jpg" alt="thumb1">
+      </button>
+      <button class="thumb" onclick="goTo(1)">
+        <img src="img/slide2.jpg" alt="thumb2">
+      </button>
+      <button class="thumb" onclick="goTo(2)">
+        <img src="img/slide3.jpg" alt="thumb3">
+      </button>
+    </div>
+  </section>
+ 
+  <!-- SEARCH BLOCK -->
+  <section class="searchBlock">
+    <div class="wrap">
+      <h2>Kerakli treningni qidiring</h2>
+      <div class="searchRow">
+        <input id="searchInput" placeholder="Masalan: masshtab, azimut, proyeksiya, GIS..." />
+        <button onclick="goSearch()">QIDIRISH</button>
+      </div>
+    </div>
+  </section>
+ 
+  <!-- BLUE MENU -->
+  <section class="blueMenu">
+    <div class="wrap blueWrap">
+      <a class="blueItem" href="courses.html">
+        <span class="blueIcon">🔎</span>
+        <span>Kurslar katalogi</span>
+      </a>
+      <a class="blueItem" href="#">
+        <span class="blueIcon">🗓️</span>
+        <span>Dars jadvali</span>
+      </a>
+      <a class="blueItem" href="#">
+        <span class="blueIcon">👤</span>
+        <span>Mening kabinetim</span>
+      </a>
+      <a class="blueItem" href="#">
+        <span class="blueIcon">🧭</span>
+        <span>O'quv rejalar</span>
+      </a>
+      <a class="blueItem" href="about.html">
+        <span class="blueIcon">📘</span>
+        <span>Fan haqida</span>
+      </a>
+    </div>
+  </section>
+ 
+  <!-- SUPPORT CARDS -->
+  <section class="supportSection">
+    <div class="wrap">
+      <div class="sectionTitle">
+        <h2>O'rganishni qo'llab-quvvatlaymiz</h2>
+        <p>
+          Boshlovchi bo'lsangiz ham, tajribali mutaxassis bo'lsangiz ham — bu platformada sizga kerakli
+          nazariya, amaliy topshiriq va testlar mavjud.
+        </p>
+      </div>
+      <div class="cards">
+        <div class="card">
+          <div class="cardImg">
+            <img src="img/card1.jpg" alt="Talabalar uchun">
+          </div>
+          <div class="cardBody">
+            <h3>Talabalar uchun</h3>
+            <p>Asosiy tushunchalar, amaliy mashqlar va nazorat testlari bilan bosqichma-bosqich o'rganish.</p>
+          </div>
+        </div>
+        <div class="card">
+          <div class="cardImg">
+            <img src="img/card2.jpg" alt="Amaliyot va loyiha">
+          </div>
+          <div class="cardBody">
+            <h3>Amaliyot va loyiha</h3>
+            <p>ArcGIS/QGIS, geoma'lumotlar, fazoviy tahlil va 3D xaritalar bo'yicha amaliy ko'nikmalar.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+ 
+  <!-- NEWS / BLOG -->
+  <section class="newsSection">
+    <div class="wrap">
+      <div class="tabs">
+        <button class="tabBtn active" onclick="openTab('news')">News</button>
+        <button class="tabBtn" onclick="openTab('blog')">From the Blog</button>
+      </div>
+ 
+      <!-- NEWS -->
+      <div class="tabContent active" id="news">
+        <div class="newsGrid">
+          <article class="newsItem">
+            <div class="newsCircle"><img src="img/news1.jpg" alt="News 1"></div>
+            <h3>Trening yo'l xaritasini aniq qiladi</h3>
+            <div class="newsMeta">GeoGAT | Aprel 2026</div>
+            <p>Topografiya va GAT bo'yicha bosqichma-bosqich treninglar sizga tez va aniq o'rganishga yordam beradi.</p>
+          </article>
+          <article class="newsItem">
+            <div class="newsCircle"><img src="img/news2.jpg" alt="News 2"></div>
+            <h3>GIS hamjamiyatini rivojlantiramiz</h3>
+            <div class="newsMeta">GeoGAT | Noyabr 2025</div>
+            <p>ArcGIS/QGIS bo'yicha amaliy mashg'ulotlar orqali fazoviy tahlil va qatlamlar bilan ishlash osonlashadi.</p>
+          </article>
+          <article class="newsItem">
+            <div class="newsCircle"><img src="img/news3.jpg" alt="News 3"></div>
+            <h3>Onlayn kurslar GIS uchun foydali</h3>
+            <div class="newsMeta">GeoGAT | Dekabr 2025</div>
+            <p>Video darslar, PDF materiallar va testlar orqali talaba o'z tezligida o'qib, natijani nazorat qiladi.</p>
+          </article>
+        </div>
+      </div>
+ 
+      <!-- BLOG -->
+      <div class="tabContent" id="blog">
+        <div class="newsGrid">
+          <article class="newsItem">
+            <div class="newsCircle"><img src="img/news1.jpg" alt="Blog 1"></div>
+            <h3>Proyeksiya tanlash bo'yicha 5 qoida</h3>
+            <div class="newsMeta">Blog | Yanvar 2026</div>
+            <p>Xarita proyeksiyasi tanlashda hudud shakli, maqsad va masshtabni inobatga olish kerak.</p>
+          </article>
+          <article class="newsItem">
+            <div class="newsCircle"><img src="img/news2.jpg" alt="Blog 2"></div>
+            <h3>Relyefni gorizontallar bilan o'qish</h3>
+            <div class="newsMeta">Blog | Fevral 2026</div>
+            <p>Gorizontallar zichligi va balandlik oralig'i relyefni tez tushunishga yordam beradi.</p>
+          </article>
+          <article class="newsItem">
+            <div class="newsCircle"><img src="img/news3.jpg" alt="Blog 3"></div>
+            <h3>QGIS'da qatlamlar bilan ishlash</h3>
+            <div class="newsMeta">Blog | Mart 2026</div>
+            <p>Vektor va rastr qatlamlarni boshqarish, stil berish va atribut jadvalini tahlil qilish.</p>
+          </article>
+        </div>
+      </div>
+    </div>
+  </section>
+ 
+  <!-- CTA -->
+  <section class="ctaBanner">
+    <div class="ctaOverlay"></div>
+    <div class="wrap ctaInner">
+      <h2>O'rganishga tayyormisiz?</h2>
+      <a href="courses.html" class="ctaBtn">Kurslarni ko'rish</a>
+    </div>
+  </section>
+ 
+  <!-- QORA BAR -->
+  <section class="blackBar">
+    <div class="wrap blackBarInner">
+      <div class="blackText">
+        Sizga yaqin hududdagi treninglar bo'yicha <b>GeoGAT hamkoriga</b> murojaat qiling.
+      </div>
+      <div class="blackRight">
+        <span>Bog'lanish:</span>
+        <div class="socialIcons">
+          <a href="#" title="Email">✉</a>
+          <a href="#" title="Telegram">📨</a>
+          <a href="#" title="Instagram">📷</a>
+          <a href="#" title="YouTube">▶</a>
+        </div>
+      </div>
+    </div>
+  </section>
+ 
+  <!-- KATTA FOOTER -->
+  <footer class="bigFooter">
+    <div class="wrap footerGrid">
+ 
+      <div class="footerBrand">
+        <div class="footerLogoBox">
+          <div class="footerLogoText">GEO<br>GAT<br>AKADEMIYA</div>
+        </div>
+        <div class="footerSocialGrid">
+          <a href="#" title="Telegram">📨</a>
+          <a href="#" title="Instagram">📷</a>
+          <a href="#" title="YouTube">▶</a>
+          <a href="#" title="Facebook">f</a>
+          <a href="#" title="Email">✉</a>
+          <a href="#" title="Sayt">🌐</a>
+        </div>
+      </div>
+ 
+      <div class="footerCol">
+        <h4>GAT (GIS)</h4>
+        <a href="#">GIS asoslari</a>
+        <a href="#">ArcGIS bo'yicha kurslar</a>
+        <a href="#">QGIS bo'yicha kurslar</a>
+        <a href="#">Fazoviy tahlil</a>
+        <a href="#">Ma'lumotlar bazasi</a>
+        <a href="#">3D xaritalar</a>
+        <a href="#">Amaliy mashg'ulotlar</a>
+      </div>
+ 
+      <div class="footerCol">
+        <h4>TOPOGRAFIYA</h4>
+        <a href="#">Masshtab va o'lchash</a>
+        <a href="#">Koordinatalar</a>
+        <a href="#">Relyef va gorizontallar</a>
+        <a href="#">Azimut va yo'nalish</a>
+        <a href="#">Topografik xaritalar</a>
+        <a href="#">Amaliy topshiriqlar</a>
+        <a href="#">Testlar</a>
+      </div>
+ 
+      <div class="footerCol">
+        <h4>KARTOGRAFIYA</h4>
+        <a href="#">Xarita turlari</a>
+        <a href="#">Proyeksiyalar</a>
+        <a href="#">Generalizatsiya</a>
+        <a href="#">Legend va belgilar</a>
+        <a href="#">Kartografik dizayn</a>
+        <a href="#">Atlas tuzish</a>
+        <a href="#">Amaliy loyihalar</a>
+      </div>
+ 
+      <div class="footerCol">
+        <h4>PLATFORMA</h4>
+        <a href="courses.html">Kurslar katalogi</a>
+        <a href="#">O'quv rejalar</a>
+        <a href="#">Sertifikatlar</a>
+        <a href="#">Mening kurslarim</a>
+        <a href="about.html">Fan haqida</a>
+        <a href="#">Yordam</a>
+        <a href="login.html">Kirish</a>
+      </div>
+ 
+      <div class="footerCol">
+        <h4>ALOQA</h4>
+        <a href="#">Telefon</a>
+        <a href="#">Email</a>
+        <a href="#">Telegram</a>
+        <a href="#">Manzil</a>
+        <a href="#">Hamkorlik</a>
+        <a href="#">Savol-javob</a>
+        <a href="#">Takliflar</a>
+      </div>
+ 
+    </div>
+ 
+    <div class="footerBottom">
+      <div class="wrap footerBottomInner">
+        <div class="footerLang">🌐 O'zbek tili</div>
+        <div class="footerLinks">
+          <a href="#">Maxfiylik</a>
+          <a href="#">Foydalanish shartlari</a>
+          <a href="#">Mualliflik huquqi</a>
+          <a href="#">Yordam</a>
+          <a href="#">Cookie sozlamalari</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+ 
+  <!-- SCRIPTS (slider, tabs, search) -->
+  <script>
+    document.getElementById("y") && (document.getElementById("y").textContent = new Date().getFullYear());
+ 
+    // Slider
+    let current = 0;
+    const slides = Array.from(document.querySelectorAll(".slide"));
+    const thumbEls = Array.from(document.querySelectorAll(".thumb"));
+ 
+    function show() {
+      slides.forEach((s, i) => s.classList.toggle("active", i === current));
+      thumbEls.forEach((t, i) => t.classList.toggle("active", i === current));
+    }
+    function nextSlide() { current = (current + 1) % slides.length; show(); }
+    function prevSlide() { current = (current - 1 + slides.length) % slides.length; show(); }
+    function goTo(i) { current = i; show(); }
+    setInterval(nextSlide, 5000);
+ 
+    // Search
+    function goSearch() {
+      const q = document.getElementById("searchInput").value.trim();
+      localStorage.setItem("searchQuery", q);
+      window.location.href = "courses.html";
+    }
+ 
+    // News/Blog tabs
+    function openTab(tabId) {
+      document.querySelectorAll(".tabBtn").forEach(btn => btn.classList.remove("active"));
+      document.querySelectorAll(".tabContent").forEach(c => c.classList.remove("active"));
+      if (tabId === "news") {
+        document.querySelectorAll(".tabBtn")[0].classList.add("active");
+      } else {
+        document.querySelectorAll(".tabBtn")[1].classList.add("active");
+      }
+      document.getElementById(tabId).classList.add("active");
+    }
+ 
+    show();
+  </script>
+ 
+  <!-- Firebase Auth: foydalanuvchi ismi ko'rsatish + logout -->
+  <script type="module">
+    import { initializeApp }    from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut }
+                                from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import { getFirestore, doc, getDoc }
+                                from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+ 
+    const firebaseConfig = {
+      apiKey:            "AIzaSyDlKFVAteGjZ3pNnKsvMsubfvTZXOdgg3g",
+      authDomain:        "sound-memory-474606-p1.firebaseapp.com",
+      projectId:         "sound-memory-474606-p1",
+      storageBucket:     "sound-memory-474606-p1.firebasestorage.app",
+      messagingSenderId: "1088934512143",
+      appId:             "1:1088934512143:web:ccb67476ecb23c2375c57a"
+    };
+ 
+    const app  = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db   = getFirestore(app);
+ 
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        // Login qilinmagan — loginga yo'naltir
+        window.location.replace("login.html");
+        return;
+      }
+ 
+      // Foydalanuvchi ma'lumotlarini Firestore dan olish
+      let displayName = user.displayName || user.email;
+      let initials = "?";
+ 
+      try {
+        const snap = await getDoc(doc(db, "users", user.uid));
+        if (snap.exists()) {
+          const data = snap.data();
+          const ism = data.ism || "";
+          const familiya = data.familiya || "";
+          if (ism) {
+            displayName = `${ism} ${familiya}`.trim();
+            // Boshlang'ich harflar: I. Karimov
+            initials = (ism[0] || "") + (familiya[0] || "");
+            initials = initials.toUpperCase();
+          }
+        }
+      } catch (e) {
+        // Firestore xatosi bo'lsa displayName ishlatamiz
+        const parts = (user.displayName || "").split(" ");
+        initials = ((parts[0]?.[0] || "") + (parts[1]?.[0] || "")).toUpperCase() || "U";
+      }
+ 
+      // UI ni yangilash
+      document.getElementById("userName").textContent   = displayName;
+      document.getElementById("userAvatar").textContent = initials || "U";
+      document.getElementById("userSection").style.display = "flex";
+      document.getElementById("loginLink").style.display   = "none";
+    });
+ 
+    // Logout funksiyasi
+    window.doLogout = async () => {
+      const btn = document.getElementById("logoutBtn");
+      btn.textContent = "Chiqilmoqda...";
+      btn.style.pointerEvents = "none";
+      try {
+        await signOut(auth);
+        window.location.replace("login.html");
+      } catch (e) {
+        btn.innerHTML = `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg> Chiqish`;
+        btn.style.pointerEvents = "auto";
+      }
+    };
+  </script>
+ 
+</body>
+</html>

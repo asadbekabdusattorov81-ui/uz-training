@@ -1,0 +1,595 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans);color:var(--color-text-primary)}
+.tabs{display:flex;gap:4px;padding:12px 0 0;border-bottom:1.5px solid var(--color-border-tertiary);margin-bottom:20px}
+.tab{padding:8px 20px;font-size:13px;font-weight:500;border-radius:8px 8px 0 0;cursor:pointer;border:1.5px solid transparent;border-bottom:none;color:var(--color-text-secondary);margin-bottom:-1.5px;background:transparent}
+.tab.active{background:var(--color-background-primary);border-color:var(--color-border-tertiary);border-bottom-color:var(--color-background-primary);color:var(--color-text-primary)}
+.view{display:none}.view.active{display:block}
+.screen{background:var(--color-background-secondary);border-radius:12px;overflow:hidden;border:1.5px solid var(--color-border-tertiary)}
+.header{background:#EFF6FF;padding:14px 20px;border-bottom:1px solid #DBEAFE}
+.hrow{display:flex;align-items:center;gap:10px}
+.logo-icon{width:38px;height:38px;background:#2563EB20;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:18px}
+.htitle{font-size:17px;font-weight:500;color:#1E293B;letter-spacing:1.5px}
+.hsub{font-size:11px;color:#64748B;margin-top:1px}
+.stat-chip{padding:7px 12px;border-radius:10px;font-size:11px;font-weight:500}
+.btn{display:flex;align-items:center;gap:6px;padding:8px 14px;border-radius:11px;font-size:13px;font-weight:500;cursor:pointer;border:1.5px solid}
+.btn-blue{background:#2563EB15;border-color:#2563EB50;color:#2563EB}
+.btn-stats{background:#2563EB;border-color:#2563EB;color:#fff}
+.btn-add{background:#10B98115;border-color:#10B98150;color:#10B981;font-weight:700}
+.divider{height:1px;background:var(--color-border-tertiary)}
+.search-bar{background:var(--color-background-primary);padding:10px 16px}
+.search-input{background:#F1F5F9;border-radius:12px;padding:10px 14px;font-size:13px;color:#94A3B8;border:1.5px solid #E2E8F0;width:100%;display:flex;align-items:center;gap:8px}
+.chips-row{display:flex;gap:8px;padding:0 16px 10px;background:var(--color-background-primary);overflow:hidden}
+.chip{padding:5px 12px;border-radius:20px;font-size:11px;font-weight:500;white-space:nowrap}
+.chip-all{background:#2563EB15;border:1.5px solid #2563EB40;color:#2563EB}
+.chip-active{background:#10B98115;border:1.5px solid #10B98140;color:#10B981}
+.chip-low{background:#F9731615;border:1.5px solid #F9731640;color:#F97316}
+.chip-out{background:#EF444415;border:1.5px solid #EF444440;color:#EF4444}
+.table-head{background:#F8FAFC;padding:10px 20px;display:flex;align-items:center;gap:0;border-bottom:1px solid #E2E8F0}
+.th{font-size:10px;font-weight:500;color:#64748B;letter-spacing:0.8px;text-transform:uppercase}
+.t-row{display:flex;align-items:center;padding:10px 20px;border-bottom:1px solid #F1F5F9;background:var(--color-background-primary)}
+.t-row:nth-child(even){background:#F9FAFB}
+.img-cell{width:52px;height:44px;background:#F1F5F9;border-radius:9px;border:1.5px solid #E2E8F0;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.pill{padding:3px 8px;border-radius:5px;font-size:10px;font-weight:500}
+.pill-out{background:#EF444415;color:#EF4444}
+.pill-low{background:#F9731615;color:#F97316}
+.pill-slow{background:#8B5CF615;color:#8B5CF6}
+.pill-ok{background:#10B98115;color:#10B981}
+.stock-box{padding:6px 10px;border-radius:9px;font-size:15px;font-weight:700;text-align:center;min-width:50px}
+.sidebar{background:var(--color-background-primary);border-left:1.5px solid var(--color-border-tertiary);display:flex;flex-direction:column}
+.sidebar-header{background:#EFF6FF;padding:14px 16px;border-bottom:1px solid #DBEAFE}
+.badge{background:#EF444415;color:#EF4444;padding:2px 7px;border-radius:5px;font-size:9px;font-weight:700}
+.badge-slow{background:#8B5CF615;color:#8B5CF6}
+.folder-tree{font-size:12px;line-height:2}
+.folder-row{display:flex;align-items:center;gap:6px;padding:2px 0}
+.folder-icon{font-size:13px;width:18px}
+.file-ext{font-size:10px;padding:1px 5px;border-radius:3px;font-weight:500}
+.ext-dart{background:#00B4D820;color:#0077A8}
+.ext-dir{background:#F59E0B20;color:#B45309}
+.new-badge{background:#10B98120;color:#10B981;font-size:9px;padding:1px 5px;border-radius:3px;font-weight:700;margin-left:4px}
+.modal-overlay{background:rgba(0,0,0,0.35);position:absolute;inset:0;display:flex;align-items:center;justify-content:center;border-radius:12px;z-index:10}
+.modal{background:var(--color-background-primary);border-radius:18px;width:380px;max-height:480px;overflow:hidden;border:1.5px solid var(--color-border-tertiary)}
+.modal-header{background:#EFF6FF;padding:14px 18px;border-bottom:1px solid #DBEAFE;display:flex;align-items:center;gap:10px}
+.mode-toggle{display:flex;background:#F1F5F9;border-radius:12px;border:1.5px solid #E2E8F0;overflow:hidden}
+.mode-btn{padding:8px 16px;font-size:12px;font-weight:500;cursor:pointer}
+.mode-btn.active{background:#2563EB;color:#fff}
+.mode-btn:not(.active){color:#64748B}
+.form-field{margin-bottom:12px}
+.field-label{font-size:11px;font-weight:500;color:#64748B;margin-bottom:4px}
+.field-input{background:#F1F5F9;border:1.5px solid #E2E8F0;border-radius:10px;padding:9px 12px;font-size:13px;color:#1E293B;width:100%}
+.save-btn{background:linear-gradient(135deg,#FFB800,#D48000);color:#fff;border:none;border-radius:14px;padding:13px;font-size:14px;font-weight:700;width:100%;text-align:center}
+.annotation{font-size:11px;color:var(--color-text-secondary);background:var(--color-background-secondary);border:1.5px dashed var(--color-border-tertiary);border-radius:8px;padding:8px 12px;margin:8px 0}
+.red-dot{width:8px;height:8px;background:#EF4444;border-radius:50%;display:inline-block}
+.green-dot{width:8px;height:8px;background:#10B981;border-radius:50%;display:inline-block}
+.callout{position:absolute;background:#1E293B;color:#fff;font-size:10px;padding:4px 8px;border-radius:6px;white-space:nowrap;z-index:20}
+.callout::after{content:'';position:absolute;border:4px solid transparent}
+.callout.bottom::after{border-top-color:#1E293B;top:100%;left:50%;transform:translateX(-50%)}
+.callout.left::after{border-right-color:#1E293B;right:100%;top:50%;transform:translateY(-50%)}
+.arrow-line{position:absolute;border-top:1.5px dashed #2563EB;z-index:5}
+</style>
+
+<div class="tabs">
+  <div class="tab active" onclick="switchTab('desktop')">🖥 Desktop (1440px)</div>
+  <div class="tab" onclick="switchTab('mobile')">📱 Mobile (390px)</div>
+  <div class="tab" onclick="switchTab('add')">➕ Qo'shish ekrani</div>
+  <div class="tab" onclick="switchTab('folder')">📁 Papka tuzilishi</div>
+</div>
+
+<!-- DESKTOP VIEW -->
+<div class="view active" id="view-desktop">
+  <div class="annotation">
+    ☝️ Yangi <strong>+ Qo'shish</strong> tugmasi — Statistika tugmasining chap tomonida joylashgan
+  </div>
+  <div class="screen" style="position:relative">
+    <!-- Header -->
+    <div class="header">
+      <div class="hrow">
+        <div class="logo-icon">🏭</div>
+        <div>
+          <div class="htitle">SKLAD</div>
+          <div class="hsub">12 xil  •  438 dona</div>
+        </div>
+        <div style="flex:1;display:flex;gap:8px;padding:0 16px">
+          <div class="stat-chip" style="background:#F9731615;border:1.5px solid #F9731640;color:#F97316">
+            <span style="font-size:10px">Tannarx</span><br><strong>12,400,000 so'm</strong>
+          </div>
+          <div class="stat-chip" style="background:#10B98115;border:1.5px solid #10B98140;color:#10B981">
+            <span style="font-size:10px">Sotuv</span><br><strong>18,600,000 so'm</strong>
+          </div>
+          <div class="stat-chip" style="background:#2563EB15;border:1.5px solid #2563EB40;color:#2563EB">
+            <span style="font-size:10px">Foyda</span><br><strong>6,200,000 so'm</strong>
+          </div>
+        </div>
+        <!-- NEW + BUTTON -->
+        <div class="btn btn-add" style="margin-right:8px;position:relative" id="add-btn-desktop">
+          <span style="font-size:16px;line-height:1">+</span>
+          <span>Qo'shish</span>
+          <div class="callout bottom" style="bottom:calc(100% + 10px);left:50%;transform:translateX(-50%)">Yangi tugma!</div>
+        </div>
+        <!-- STATS BUTTON -->
+        <div class="btn btn-stats">
+          <span>📊</span>
+          <span>Statistika</span>
+          <span style="font-size:11px">›</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main + Sidebar -->
+    <div style="display:flex;min-height:360px">
+      <!-- Main content -->
+      <div style="flex:1;overflow:hidden">
+        <div class="search-bar">
+          <div class="search-input">
+            <span style="opacity:.5">🔍</span>
+            <span>Nom, model, zavod...</span>
+          </div>
+        </div>
+        <div class="chips-row">
+          <div class="chip chip-all">Hammasi <strong>12</strong></div>
+          <div class="chip chip-active">Mavjud <strong>9</strong></div>
+          <div class="chip chip-low">Kam <strong>2</strong></div>
+          <div class="chip chip-out">Tugagan <strong>1</strong></div>
+        </div>
+        <div class="divider"></div>
+        <!-- Table header -->
+        <div class="table-head">
+          <div class="th" style="width:36px">№</div>
+          <div class="th" style="width:80px">RASM</div>
+          <div class="th" style="flex:1">TOVAR</div>
+          <div class="th" style="width:100px">MODEL</div>
+          <div class="th" style="width:100px">ZAVOD</div>
+          <div class="th" style="width:120px;text-align:right">SOTUV</div>
+          <div class="th" style="width:90px;text-align:center">MIQDORI</div>
+          <div class="th" style="width:100px;text-align:center">JOY</div>
+          <div class="th" style="width:40px"></div>
+        </div>
+        <div class="divider"></div>
+        <!-- Row 1 -->
+        <div class="t-row">
+          <div style="width:36px;font-size:13px;color:#CBD5E1;font-weight:700">1</div>
+          <div style="width:80px"><div class="img-cell">🔧</div></div>
+          <div style="flex:1">
+            <div style="font-size:13px;font-weight:500;color:#1E293B">SALNIK RABOCHIY</div>
+            <div class="pill pill-low" style="display:inline-block;margin-top:3px">Kam</div>
+          </div>
+          <div style="width:100px;font-size:12px;color:#2563EB;background:#EFF6FF;padding:4px 8px;border-radius:7px;margin-right:8px">TICO</div>
+          <div style="width:100px;font-size:12px;color:#14B8A6;background:#F0FDFA;padding:4px 8px;border-radius:7px;margin-right:8px">KOS</div>
+          <div style="width:120px;text-align:right;font-size:13px;font-weight:700;color:#F59E0B">85,000 so'm</div>
+          <div style="width:90px;text-align:center">
+            <div class="stock-box" style="background:#F9731615;color:#F97316;border:1.5px solid #F9731640">3</div>
+          </div>
+          <div style="width:100px;text-align:center;font-size:11px;color:#14B8A6;background:#F0FDFA;padding:4px 8px;border-radius:7px">A-3</div>
+          <div style="width:40px;display:flex;justify-content:flex-end">
+            <div style="width:28px;height:28px;background:#EF444410;border:1.5px solid #EF444430;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px">🗑</div>
+          </div>
+        </div>
+        <!-- Row 2 -->
+        <div class="t-row">
+          <div style="width:36px;font-size:13px;color:#CBD5E1;font-weight:700">2</div>
+          <div style="width:80px"><div class="img-cell">⚙️</div></div>
+          <div style="flex:1">
+            <div style="font-size:13px;font-weight:500;color:#1E293B">ПОДШИПНИК 205</div>
+            <div class="pill pill-ok" style="display:inline-block;margin-top:3px">Mavjud</div>
+          </div>
+          <div style="width:100px;font-size:12px;color:#2563EB;background:#EFF6FF;padding:4px 8px;border-radius:7px;margin-right:8px">NEXIA</div>
+          <div style="width:100px;font-size:12px;color:#14B8A6;background:#F0FDFA;padding:4px 8px;border-radius:7px;margin-right:8px">SKF</div>
+          <div style="width:120px;text-align:right;font-size:13px;font-weight:700;color:#F59E0B">45,000 so'm</div>
+          <div style="width:90px;text-align:center">
+            <div class="stock-box" style="background:#10B98115;color:#10B981;border:1.5px solid #10B98140">24</div>
+          </div>
+          <div style="width:100px;text-align:center;font-size:11px;color:#14B8A6;background:#F0FDFA;padding:4px 8px;border-radius:7px">B-1</div>
+          <div style="width:40px;display:flex;justify-content:flex-end">
+            <div style="width:28px;height:28px;background:#EF444410;border:1.5px solid #EF444430;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px">🗑</div>
+          </div>
+        </div>
+        <!-- Row 3 -->
+        <div class="t-row">
+          <div style="width:36px;font-size:13px;color:#CBD5E1;font-weight:700">3</div>
+          <div style="width:80px"><div class="img-cell">🛞</div></div>
+          <div style="flex:1">
+            <div style="font-size:13px;font-weight:500;color:#1E293B">ТОРМОЗНОЙ ДИСК</div>
+            <div class="pill pill-out" style="display:inline-block;margin-top:3px">Tugagan</div>
+          </div>
+          <div style="width:100px;font-size:12px;color:#2563EB;background:#EFF6FF;padding:4px 8px;border-radius:7px;margin-right:8px">DAMAS</div>
+          <div style="width:100px;font-size:12px;color:#14B8A6;background:#F0FDFA;padding:4px 8px;border-radius:7px;margin-right:8px">—</div>
+          <div style="width:120px;text-align:right;font-size:13px;font-weight:700;color:#94A3B8">0 so'm</div>
+          <div style="width:90px;text-align:center">
+            <div class="stock-box" style="background:#EF444415;color:#EF4444;border:1.5px solid #EF444440">0</div>
+          </div>
+          <div style="width:100px"></div>
+          <div style="width:40px;display:flex;justify-content:flex-end">
+            <div style="width:28px;height:28px;background:#EF444410;border:1.5px solid #EF444430;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px">🗑</div>
+          </div>
+        </div>
+        <div style="padding:12px 20px;font-size:11px;color:#94A3B8;text-align:center">
+          … va yana 9 ta mahsulot
+        </div>
+      </div>
+
+      <!-- Stats Sidebar (collapsed state shown) -->
+      <div class="sidebar" style="width:52px;align-items:center;padding:12px 0;gap:8px;border-left:1.5px solid #E2E8F0;background:#F8FAFC">
+        <div style="font-size:10px;color:#94A3B8;writing-mode:vertical-rl;transform:rotate(180deg);letter-spacing:1px;margin:8px 0">STATISTIKA</div>
+        <div style="width:32px;height:32px;background:#8B5CF615;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px">😴</div>
+        <div class="badge-slow badge" style="transform:rotate(-90deg)">3 sekin</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="annotation" style="margin-top:12px">
+    📐 Layout: Header (gradient) → Search + Chips → Table header → Rows | Sidebar (collapse/expand animatsiyasi bor)
+  </div>
+</div>
+
+<!-- MOBILE VIEW -->
+<div class="view" id="view-mobile">
+  <div style="display:flex;justify-content:center">
+    <div style="width:390px">
+      <div class="annotation">📱 iPhone-size ko'rinish — TabBar qo'shilgan</div>
+      <div class="screen">
+        <!-- Mobile Header -->
+        <div class="header">
+          <div class="hrow" style="gap:8px">
+            <div class="logo-icon" style="width:34px;height:34px">🏭</div>
+            <div>
+              <div class="htitle" style="font-size:15px">SKLAD</div>
+              <div class="hsub">12 xil • 438 dona</div>
+            </div>
+            <div style="flex:1"></div>
+            <!-- NEW + button mobile -->
+            <div style="width:36px;height:36px;background:#10B98115;border:1.5px solid #10B98150;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;color:#10B981;position:relative">
+              +
+              <div class="callout left" style="right:calc(100% + 8px);top:50%;transform:translateY(-50%)">Yangi!</div>
+            </div>
+            <!-- Stats button mobile -->
+            <div style="width:36px;height:36px;background:#2563EB15;border:1.5px solid #2563EB50;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px">📊</div>
+          </div>
+          <!-- Mobile stat row -->
+          <div style="display:flex;gap:6px;margin-top:10px">
+            <div style="flex:1;background:#F9731615;border:1.5px solid #F9731640;border-radius:9px;padding:7px 10px">
+              <div style="font-size:9px;color:#F97316;font-weight:500">Tannarx</div>
+              <div style="font-size:12px;color:#F97316;font-weight:700">12.4M</div>
+            </div>
+            <div style="flex:1;background:#10B98115;border:1.5px solid #10B98140;border-radius:9px;padding:7px 10px">
+              <div style="font-size:9px;color:#10B981;font-weight:500">Sotuv</div>
+              <div style="font-size:12px;color:#10B981;font-weight:700">18.6M</div>
+            </div>
+            <div style="flex:1;background:#2563EB15;border:1.5px solid #2563EB40;border-radius:9px;padding:7px 10px">
+              <div style="font-size:9px;color:#2563EB;font-weight:500">Foyda</div>
+              <div style="font-size:12px;color:#2563EB;font-weight:700">6.2M</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TabBar -->
+        <div style="display:flex;background:#fff;border-bottom:2px solid #2563EB20">
+          <div style="flex:1;padding:10px;text-align:center;border-bottom:2px solid #2563EB;margin-bottom:-2px;display:flex;align-items:center;justify-content:center;gap:5px">
+            <span style="font-size:14px">📦</span>
+            <span style="font-size:12px;color:#2563EB;font-weight:500">Mahsulotlar</span>
+          </div>
+          <div style="flex:1;padding:10px;text-align:center;display:flex;align-items:center;justify-content:center;gap:5px">
+            <span style="font-size:14px">📋</span>
+            <span style="font-size:12px;color:#64748B">Tarix</span>
+          </div>
+        </div>
+
+        <!-- Search -->
+        <div style="padding:10px 12px;background:#fff">
+          <div class="search-input"><span style="opacity:.5">🔍</span><span>Nom, model...</span></div>
+        </div>
+        <div class="chips-row" style="flex-wrap:nowrap">
+          <div class="chip chip-all">Hammasi 12</div>
+          <div class="chip chip-active">Mavjud 9</div>
+          <div class="chip chip-low">Kam 2</div>
+          <div class="chip chip-out">Tugagan 1</div>
+        </div>
+        <div class="divider"></div>
+        <!-- Mobile rows -->
+        <div class="t-row" style="gap:10px">
+          <div style="font-size:12px;color:#CBD5E1;font-weight:700;width:20px">1</div>
+          <div class="img-cell" style="width:46px;height:40px;flex-shrink:0">🔧</div>
+          <div style="flex:1">
+            <div style="font-size:12px;font-weight:500;color:#1E293B">SALNIK RABOCHIY</div>
+            <div class="pill pill-low" style="display:inline-block;margin-top:2px">Kam</div>
+          </div>
+          <div style="text-align:center">
+            <div class="stock-box" style="background:#F9731615;color:#F97316;border:1.5px solid #F9731640;font-size:14px;padding:5px 8px">3</div>
+            <div style="font-size:10px;color:#CBD5E1">ta</div>
+          </div>
+          <div style="width:28px;height:28px;background:#EF444410;border:1.5px solid #EF444430;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:12px">🗑</div>
+        </div>
+        <div class="t-row" style="gap:10px;background:#F9FAFB">
+          <div style="font-size:12px;color:#CBD5E1;font-weight:700;width:20px">2</div>
+          <div class="img-cell" style="width:46px;height:40px;flex-shrink:0">⚙️</div>
+          <div style="flex:1">
+            <div style="font-size:12px;font-weight:500;color:#1E293B">ПОДШИПНИК 205</div>
+            <div class="pill pill-slow" style="display:inline-block;margin-top:2px">Sekin</div>
+          </div>
+          <div style="text-align:center">
+            <div class="stock-box" style="background:#10B98115;color:#10B981;border:1.5px solid #10B98140;font-size:14px;padding:5px 8px">24</div>
+            <div style="font-size:10px;color:#CBD5E1">ta</div>
+          </div>
+          <div style="width:28px;height:28px;background:#EF444410;border:1.5px solid #EF444430;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:12px">🗑</div>
+        </div>
+        <div style="padding:10px;font-size:11px;color:#94A3B8;text-align:center">↕ scroll</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ADD SCREEN -->
+<div class="view" id="view-add">
+  <div class="annotation">+ tugmasi bosilganda chiqadigan ekran (AddEditScreen) — Jadval yoki Karta mode</div>
+  <div style="display:flex;gap:16px;flex-wrap:wrap">
+    <!-- Card mode -->
+    <div style="flex:1;min-width:280px">
+      <div style="font-size:12px;font-weight:500;color:var(--color-text-secondary);margin-bottom:8px">🃏 Karta rejimi (bitta mahsulot)</div>
+      <div class="screen">
+        <!-- Modal header -->
+        <div style="background:#EFF6FF;padding:12px 16px;border-bottom:1px solid #DBEAFE;display:flex;align-items:center;gap:10px">
+          <div style="width:36px;height:36px;background:linear-gradient(135deg,#FFB800,#D48000);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:18px">➕</div>
+          <div style="flex:1">
+            <div style="font-size:14px;font-weight:500;color:#1E293B">Mahsulot qo'shish</div>
+            <div style="font-size:10px;color:#64748B">Har 3 sek avtosave</div>
+          </div>
+          <div class="mode-toggle">
+            <div class="mode-btn">📋 Jadval</div>
+            <div class="mode-btn active">🃏 Karta</div>
+          </div>
+        </div>
+        <div style="padding:14px 16px;display:flex;flex-direction:column;gap:10px">
+          <!-- Image -->
+          <div style="width:100%;height:80px;background:#F1F5F9;border:1.5px dashed #CBD5E1;border-radius:14px;display:flex;align-items:center;justify-content:center;gap:8px;color:#94A3B8;font-size:12px">
+            <span>📷</span> Rasm qo'shish
+          </div>
+          <!-- Fields -->
+          <div class="form-field">
+            <div class="field-label">Tovar nomi *</div>
+            <div class="field-input" style="background:#fff;border-color:#2563EB;border-width:2px;color:#1E293B">SALNIK RABOCHIY</div>
+          </div>
+          <div style="display:flex;gap:10px">
+            <div class="form-field" style="flex:1">
+              <div class="field-label">Model</div>
+              <div class="field-input">TICO</div>
+            </div>
+            <div class="form-field" style="flex:1">
+              <div class="field-label">Zavod</div>
+              <div class="field-input">KOS</div>
+            </div>
+          </div>
+          <div style="display:flex;gap:10px">
+            <div class="form-field" style="flex:1">
+              <div class="field-label">Sotuv narx</div>
+              <div class="field-input" style="display:flex;align-items:center;gap:6px">
+                <span style="background:#D1FAE5;color:#10B981;font-size:10px;padding:2px 5px;border-radius:5px;font-weight:700">SO'M</span>
+                85,000
+              </div>
+            </div>
+            <div class="form-field" style="flex:1">
+              <div class="field-label">Tan narx</div>
+              <div class="field-input">65,000</div>
+            </div>
+          </div>
+          <div style="display:flex;gap:8px">
+            <div style="background:#10B98115;border:1.5px solid #10B98140;color:#10B981;padding:6px 12px;border-radius:14px;font-size:11px;font-weight:700">✓ Foyda: +20,000</div>
+            <div style="background:#F1F5F9;border:1.5px solid #E2E8F0;color:#64748B;padding:6px 12px;border-radius:14px;font-size:11px">≈ $1.57</div>
+          </div>
+          <div class="save-btn">✓ Omborga qo'shish</div>
+        </div>
+      </div>
+    </div>
+    <!-- Table mode preview -->
+    <div style="flex:1;min-width:280px">
+      <div style="font-size:12px;font-weight:500;color:var(--color-text-secondary);margin-bottom:8px">📋 Jadval rejimi (ko'p mahsulot)</div>
+      <div class="screen">
+        <div style="background:#F0FDFA;padding:12px 16px;border-bottom:1px solid #CCFBF1;display:flex;align-items:center;gap:10px">
+          <div style="width:36px;height:36px;background:linear-gradient(135deg,#14B8A6,#0D9488);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:18px">📋</div>
+          <div style="flex:1">
+            <div style="font-size:14px;font-weight:500;color:#1E293B">Ko'p mahsulot qo'shish</div>
+            <div style="font-size:10px;color:#64748B">Tab — keyingi katak • Enter — keyingi qator</div>
+          </div>
+          <div style="background:#10B98120;border:1px solid #10B98140;color:#10B981;padding:5px 10px;border-radius:14px;font-size:10px;font-weight:700;display:flex;align-items:center;gap:5px">
+            <span style="width:6px;height:6px;background:#10B981;border-radius:50%;display:inline-block"></span>
+            Avtosave
+          </div>
+        </div>
+        <div style="padding:12px 16px;overflow-x:auto">
+          <div style="background:#F8FAFC;border-radius:10px;border:1px solid #E2E8F0;min-width:540px">
+            <!-- Table mini header -->
+            <div style="display:flex;padding:8px 12px;gap:6px;border-bottom:1px solid #E2E8F0">
+              <div style="width:24px;font-size:9px;color:#94A3B8;font-weight:700">№</div>
+              <div style="width:44px;font-size:9px;color:#94A3B8;font-weight:700">RASM</div>
+              <div style="flex:1;font-size:9px;color:#94A3B8;font-weight:700">NOM *</div>
+              <div style="width:70px;font-size:9px;color:#94A3B8;font-weight:700">SOTUV</div>
+              <div style="width:70px;font-size:9px;color:#94A3B8;font-weight:700">TAN</div>
+              <div style="width:50px;font-size:9px;color:#94A3B8;font-weight:700">MIQDOR</div>
+              <div style="width:24px"></div>
+            </div>
+            <!-- Row 1 filled -->
+            <div style="display:flex;align-items:center;padding:6px 12px;gap:6px;background:#fff;border-bottom:1px solid #F1F5F9">
+              <div style="width:24px;font-size:11px;color:#CBD5E1;font-weight:700">1</div>
+              <div style="width:44px;height:32px;background:#EFF6FF;border:1.5px solid #2563EB50;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px">📷</div>
+              <div style="flex:1;background:#EFF6FF;border:1.5px solid #2563EB;border-radius:8px;padding:5px 8px;font-size:11px;color:#1E293B;font-weight:500">SALNIK RABOCHIY</div>
+              <div style="width:70px;background:#F1F5F9;border:1.5px solid #E2E8F0;border-radius:8px;padding:5px 8px;font-size:11px;color:#1E293B">85,000</div>
+              <div style="width:70px;background:#F1F5F9;border:1.5px solid #E2E8F0;border-radius:8px;padding:5px 8px;font-size:11px;color:#1E293B">65,000</div>
+              <div style="width:50px;background:#F1F5F9;border:1.5px solid #E2E8F0;border-radius:8px;padding:5px 8px;font-size:11px;color:#1E293B">10</div>
+              <div style="width:24px;font-size:14px;color:#CBD5E1;text-align:center">✕</div>
+            </div>
+            <!-- Row 2 empty -->
+            <div style="display:flex;align-items:center;padding:6px 12px;gap:6px;background:#F9FAFB;border-bottom:1px solid #F1F5F9">
+              <div style="width:24px;font-size:11px;color:#CBD5E1;font-weight:700">2</div>
+              <div style="width:44px;height:32px;background:#F1F5F9;border:1.5px solid #E2E8F0;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;color:#CBD5E1">+</div>
+              <div style="flex:1;background:#F1F5F9;border:1.5px solid #E2E8F0;border-radius:8px;padding:5px 8px;font-size:11px;color:#CBD5E1">Tovar nomi...</div>
+              <div style="width:70px;background:#F1F5F9;border:1.5px solid #E2E8F0;border-radius:8px;padding:5px 8px;font-size:11px;color:#CBD5E1">90,000</div>
+              <div style="width:70px;background:#F1F5F9;border:1.5px solid #E2E8F0;border-radius:8px;padding:5px 8px;font-size:11px;color:#CBD5E1">70,000</div>
+              <div style="width:50px;background:#F1F5F9;border:1.5px solid #E2E8F0;border-radius:8px;padding:5px 8px;font-size:11px;color:#CBD5E1">5</div>
+              <div style="width:24px;font-size:14px;color:#CBD5E1;text-align:center">✕</div>
+            </div>
+            <div style="padding:8px 12px;display:flex;gap:6px">
+              <div style="background:#14B8A615;border:1.5px solid #14B8A650;color:#14B8A6;padding:5px 10px;border-radius:8px;font-size:11px;font-weight:700">+1 qator</div>
+              <div style="background:#2563EB15;border:1.5px solid #2563EB50;color:#2563EB;padding:5px 10px;border-radius:8px;font-size:11px;font-weight:700">+5 qator</div>
+            </div>
+          </div>
+          <div style="margin-top:10px;background:#10B981;color:#fff;border-radius:12px;padding:12px;text-align:center;font-size:13px;font-weight:700">💾 Hammasini saqlash (1 ta)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOLDER STRUCTURE -->
+<div class="view" id="view-folder">
+  <div class="annotation">📁 Papka tuzilishi — barcha fayllar alohida ajratilgan</div>
+  <div style="display:flex;gap:16px;flex-wrap:wrap">
+    <div style="flex:1;min-width:280px;background:var(--color-background-primary);border-radius:12px;border:1.5px solid var(--color-border-tertiary);padding:16px">
+      <div style="font-size:13px;font-weight:500;margin-bottom:12px;color:var(--color-text-primary)">lib/features/warehouse/</div>
+      <div class="folder-tree">
+        <div class="folder-row" style="margin-left:0">
+          <span class="folder-icon">📁</span>
+          <strong style="font-size:12px">warehouse/</strong>
+          <span class="ext-dir file-ext">feature</span>
+        </div>
+        <div class="folder-row" style="margin-left:20px">
+          <span class="folder-icon">📄</span>
+          <span style="font-size:12px">warehouse_screen.dart</span>
+          <span class="ext-dart file-ext">dart</span>
+          <span style="font-size:10px;color:var(--color-text-secondary);margin-left:6px">Asosiy ekran</span>
+        </div>
+        <div class="folder-row" style="margin-left:20px">
+          <span class="folder-icon">📄</span>
+          <span style="font-size:12px">add_edit_screen.dart</span>
+          <span class="ext-dart file-ext">dart</span>
+          <span style="font-size:10px;color:var(--color-text-secondary);margin-left:6px">Qo'shish/tahrirlash</span>
+        </div>
+        <div class="folder-row" style="margin-left:20px">
+          <span class="folder-icon">📁</span>
+          <span style="font-size:12px">models/</span>
+        </div>
+        <div class="folder-row" style="margin-left:40px">
+          <span class="folder-icon">📄</span>
+          <span style="font-size:12px">models.dart</span>
+          <span class="ext-dart file-ext">dart</span>
+          <span style="font-size:10px;color:var(--color-text-secondary);margin-left:6px">_CatInfo, _TRow</span>
+        </div>
+        <div class="folder-row" style="margin-left:20px">
+          <span class="folder-icon">📁</span>
+          <span style="font-size:12px">widgets/</span>
+        </div>
+        <div class="folder-row" style="margin-left:40px">
+          <span class="folder-icon">📄</span>
+          <span style="font-size:12px">widgets.dart</span>
+          <span class="ext-dart file-ext">dart</span>
+          <span style="font-size:10px;color:var(--color-text-secondary);margin-left:6px">WFieldWidget, WIconBtn</span>
+        </div>
+        <div class="folder-row" style="margin-left:40px">
+          <span class="folder-icon">📄</span>
+          <span style="font-size:12px">image_widget.dart</span>
+          <span class="ext-dart file-ext">dart</span>
+          <span style="font-size:10px;color:var(--color-text-secondary);margin-left:6px">_ImgWidget, _ImgHelper</span>
+        </div>
+        <div class="folder-row" style="margin-left:40px">
+          <span class="folder-icon">📄</span>
+          <span style="font-size:12px">history_list.dart</span>
+          <span class="ext-dart file-ext">dart</span>
+          <span style="font-size:10px;color:var(--color-text-secondary);margin-left:6px">_HistoryList</span>
+        </div>
+        <div class="folder-row" style="margin-left:40px">
+          <span class="folder-icon">📄</span>
+          <span style="font-size:12px">stats_sidebar.dart</span>
+          <span class="ext-dart file-ext">dart</span>
+          <span style="font-size:10px;color:var(--color-text-secondary);margin-left:6px">_StatsSidebar</span>
+        </div>
+        <div class="folder-row" style="margin-left:40px">
+          <span class="folder-icon">📄</span>
+          <span style="font-size:12px">confirm_dialog.dart</span>
+          <span class="ext-dart file-ext">dart</span>
+          <span style="font-size:10px;color:var(--color-text-secondary);margin-left:6px">_ConfirmDialog</span>
+        </div>
+        <div class="folder-row" style="margin-left:20px">
+          <span class="folder-icon">📁</span>
+          <span style="font-size:12px">repository/</span>
+        </div>
+        <div class="folder-row" style="margin-left:40px">
+          <span class="folder-icon">📄</span>
+          <span style="font-size:12px">repository.dart</span>
+          <span class="ext-dart file-ext">dart</span>
+          <span style="font-size:10px;color:var(--color-text-secondary);margin-left:6px">WarehouseRepository</span>
+        </div>
+        <div class="folder-row" style="margin-left:40px">
+          <span class="folder-icon">📄</span>
+          <span style="font-size:12px">image.dart</span>
+          <span class="ext-dart file-ext">dart</span>
+          <span style="font-size:10px;color:var(--color-text-secondary);margin-left:6px">WarehouseImageHelper</span>
+        </div>
+        <div class="folder-row" style="margin-left:20px">
+          <span class="folder-icon">📁</span>
+          <span style="font-size:12px">constants/</span>
+        </div>
+        <div class="folder-row" style="margin-left:40px">
+          <span class="folder-icon">📄</span>
+          <span style="font-size:12px">warehouse_constants.dart</span>
+          <span class="ext-dart file-ext">dart</span>
+          <span style="font-size:10px;color:var(--color-text-secondary);margin-left:6px">kUnits, kDraftKey, WC, WF</span>
+        </div>
+        <div class="folder-row" style="margin-left:20px">
+          <span class="folder-icon">📄</span>
+          <span style="font-size:12px;font-weight:700;color:#2563EB">warehouse_barrel.dart</span>
+          <span class="ext-dart file-ext">dart</span>
+          <span class="new-badge">export</span>
+          <span style="font-size:10px;color:var(--color-text-secondary);margin-left:6px">barcha export</span>
+        </div>
+      </div>
+    </div>
+    <div style="flex:1;min-width:240px">
+      <div style="background:var(--color-background-primary);border-radius:12px;border:1.5px solid var(--color-border-tertiary);padding:16px;margin-bottom:12px">
+        <div style="font-size:13px;font-weight:500;margin-bottom:10px">🔗 + tugmasi ulash kodi</div>
+        <div style="background:#1E293B;border-radius:10px;padding:12px;font-family:var(--font-mono);font-size:11px;color:#E2E8F0;line-height:1.8">
+          <span style="color:#94A3B8">// warehouse_screen.dart header ichida</span><br>
+          <span style="color:#7DD3FC">GestureDetector</span>(<br>
+          &nbsp;&nbsp;<span style="color:#94A3B8">onTap: () =></span><br>
+          &nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#7DD3FC">Navigator</span>.push(<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;context,<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#7DD3FC">MaterialPageRoute</span>(<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#94A3B8">builder: (_) =></span><br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#86EFAC">AddEditScreen</span>(<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#FCA5A5">cats: _cats</span>,<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;),<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;),<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;),<br>
+          ),
+        </div>
+      </div>
+      <div style="background:var(--color-background-primary);border-radius:12px;border:1.5px solid var(--color-border-tertiary);padding:16px">
+        <div style="font-size:13px;font-weight:500;margin-bottom:10px">✅ + tugmasi dizayni</div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="display:flex;align-items:center;gap:10px">
+            <div class="btn btn-add" style="font-size:13px">+ Qo'shish</div>
+            <span style="font-size:11px;color:var(--color-text-secondary)">Desktop — Statistika chap tomoni</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px">
+            <div style="width:36px;height:36px;background:#10B98115;border:1.5px solid #10B98150;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;color:#10B981;font-weight:700">+</div>
+            <span style="font-size:11px;color:var(--color-text-secondary)">Mobile — icon only</span>
+          </div>
+          <div style="background:#F1F5F9;border-radius:8px;padding:10px;font-size:11px;color:var(--color-text-secondary);line-height:1.7">
+            🎨 Rang: <strong style="color:#10B981">#10B981 (green)</strong><br>
+            📐 Icon: Icons.add_circle_rounded<br>
+            💡 Hover: opacity 0.85 animation<br>
+            📍 Joy: headerda eng o'ngdan 2-chi
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function switchTab(id){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.getElementById('view-'+id).classList.add('active');
+  const tabs=['desktop','mobile','add','folder'];
+  const idx=tabs.indexOf(id);
+  document.querySelectorAll('.tab')[idx].classList.add('active');
+}
+</script>
