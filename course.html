@@ -1,215 +1,395 @@
 <!doctype html>
 <html lang="uz">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>GeoGAT Akademiya — Modul</title>
-  <link rel="stylesheet" href="css/style.css" />
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>GeoGAT — Modul</title>
+  <link rel="stylesheet" href="css/style.css"/>
   <style>
-    /* ── Course page styles ── */
-    .cheroInner {
-      display: flex; align-items: center; gap: 22px;
-      padding: 32px 28px; border-radius: 14px;
-      margin-bottom: 28px;
-    }
-    .cheroEmoji { font-size: 56px; flex-shrink: 0; }
-    .cheroText  { color: #fff; }
-    .cheroBadge {
-      display: inline-block; font-size: 11px; font-weight: 700;
-      padding: 3px 12px; border-radius: 20px; color: #fff;
-      text-transform: uppercase; letter-spacing: .4px; margin-bottom: 8px;
-    }
-    .cheroText h1 { font-size: 26px; font-weight: 700; margin-bottom: 6px; }
-    .cheroMeta    { font-size: 13px; opacity: .85; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #f4f5f8; font-family: 'Segoe UI', system-ui, sans-serif; min-height: 100vh; }
 
-    /* Layout */
-    .courseLayout {
-      display: grid;
-      grid-template-columns: 240px 1fr;
-      gap: 24px;
-      margin-top: 24px;
-      margin-bottom: 48px;
+    /* ── TOP NAV ── */
+    .topNav {
+      position: sticky; top: 0; z-index: 100;
+      background: #fff; border-bottom: 1px solid #eaecf0;
+      padding: 13px 18px;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .topNavBack {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: #f0f2f5; border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; color: #444; transition: background .15s; flex-shrink: 0;
+    }
+    .topNavBack:hover { background: #e0e4eb; }
+    .topNavTitle {
+      font-size: 15px; font-weight: 700; color: #1a1a2e;
+      flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .topNavStar {
+      display: flex; align-items: center; gap: 5px;
+      font-size: 13px; font-weight: 700; color: #f5a623;
     }
 
-    /* Sidebar */
-    .courseSide { display: flex; flex-direction: column; gap: 16px; }
-    .sideBox {
-      background: #fff; border: 1px solid #e0e6ef;
-      border-radius: 12px; padding: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    /* ── MODULE HERO ── */
+    .moduleHero {
+      margin: 16px 16px 0;
+      border-radius: 20px; overflow: hidden;
+      position: relative; min-height: 120px;
+      display: flex; align-items: center;
+      padding: 22px 22px 22px 22px;
     }
-    .sideTitle {
+    .heroLeft { flex: 1; }
+    .heroBadge {
+      display: inline-block; font-size: 10px; font-weight: 700;
+      padding: 3px 10px; border-radius: 20px;
+      background: rgba(255,255,255,0.25); color: #fff;
+      text-transform: uppercase; letter-spacing: .5px; margin-bottom: 8px;
+    }
+    .heroTitle { font-size: 22px; font-weight: 800; color: #fff; line-height: 1.25; margin-bottom: 5px; }
+    .heroMeta  { font-size: 12px; color: rgba(255,255,255,.85); }
+    .heroEmoji { font-size: 64px; margin-left: 12px; flex-shrink: 0; filter: drop-shadow(2px 4px 8px rgba(0,0,0,0.2)); }
+
+    /* ── SECTION LABEL ── */
+    .secLabel {
       font-size: 11px; font-weight: 700; text-transform: uppercase;
-      letter-spacing: .6px; color: #888; margin-bottom: 10px;
+      letter-spacing: .8px; color: #999; margin: 20px 18px 10px;
     }
-    .sideNavItem {
-      display: block; padding: 9px 12px; border-radius: 8px;
-      font-size: 13px; font-weight: 500; color: #444;
-      text-decoration: none; transition: background .15s, color .15s;
-      margin-bottom: 2px;
-    }
-    .sideNavItem:hover  { background: #f0f4fb; color: #1a6fc4; }
-    .sideNavItem.active { background: #eff3ff; color: #3b6ef8; font-weight: 700; }
 
-    /* File list */
-    .fileItem {
-      display: flex; align-items: center; gap: 8px;
-      padding: 8px 10px; border-radius: 8px; margin-bottom: 4px;
-      background: #f8f9fc; border: 1px solid #e4e8f0;
-      text-decoration: none; color: #333; font-size: 13px;
-      transition: background .15s;
+    /* ── LESSON BANNER CARDS ── */
+    .lessonsWrap { padding: 0 16px 30px; display: flex; flex-direction: column; gap: 12px; }
+
+    .lessonCard {
+      border-radius: 20px; overflow: hidden; cursor: pointer;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 20px 20px 20px 22px; min-height: 110px;
+      position: relative;
+      transition: transform .18s, box-shadow .18s;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.12);
     }
-    .fileItem:hover { background: #e8f0fb; color: #1a6fc4; }
-    .fileItemIcon { font-size: 18px; flex-shrink: 0; }
-    .fileItemName { flex: 1; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .fileItemExt  { font-size: 10px; color: #999; text-transform: uppercase; flex-shrink: 0; }
-    .emptyFile    { font-size: 12px; color: #aaa; text-align: center; padding: 14px 0; }
+    .lessonCard:active { transform: scale(0.97); }
+    .lessonCard:hover  { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(0,0,0,0.18); }
+
+    /* Subtle shine overlay */
+    .lessonCard::after {
+      content: ""; position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.12) 0%, transparent 60%);
+      pointer-events: none; border-radius: 20px;
+    }
+
+    .lcLeft { flex: 1; min-width: 0; }
+    .lcNum  {
+      font-size: 10.5px; font-weight: 700; color: rgba(255,255,255,.8);
+      text-transform: uppercase; letter-spacing: .5px; margin-bottom: 6px;
+    }
+    .lcTitle {
+      font-size: 19px; font-weight: 800; color: #fff;
+      line-height: 1.25; margin-bottom: 6px;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.15);
+    }
+    .lcDesc { font-size: 12.5px; color: rgba(255,255,255,.88); line-height: 1.4; }
+    .lcRight { font-size: 58px; margin-left: 14px; flex-shrink: 0; filter: drop-shadow(1px 3px 6px rgba(0,0,0,0.2)); }
+
+    /* Empty / loading */
+    .emptyLessons {
+      text-align: center; padding: 60px 20px; color: #aaa;
+    }
+    .emptyLessons .el-icon { font-size: 52px; margin-bottom: 14px; }
+    .emptyLessons p { font-size: 15px; font-weight: 600; color: #888; margin-bottom: 6px; }
+    .emptyLessons small { font-size: 13px; color: #bbb; }
+    .cardLoading {
+      background: #fff; border-radius: 20px; height: 110px;
+      margin-bottom: 12px; animation: shimmer 1.4s infinite;
+    }
+    @keyframes shimmer {
+      0%,100% { opacity: .5; }
+      50%      { opacity: 1; }
+    }
+
+    /* ══════════════════════════════════════════
+       LESSON CONTENT VIEW
+    ══════════════════════════════════════════ */
+    #contentView { display: none; background: #f4f5f8; min-height: 100vh; }
+
+    /* Lesson header bar */
+    .lessonTopBar {
+      padding: 14px 16px 0;
+    }
+    .lessonHeroBanner {
+      border-radius: 18px; padding: 18px 20px;
+      display: flex; align-items: center; gap: 14px; margin-bottom: 14px;
+    }
+    .lhbNum {
+      width: 44px; height: 44px; border-radius: 50%;
+      background: rgba(255,255,255,0.25);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; font-weight: 800; color: #fff; flex-shrink: 0;
+    }
+    .lhbInfo { flex: 1; }
+    .lhbName { font-size: 16px; font-weight: 800; color: #fff; line-height: 1.3; }
+    .lhbMeta { font-size: 11px; color: rgba(255,255,255,.8); margin-top: 2px; }
+
+    /* Section tabs */
+    .secTabs {
+      display: flex; gap: 6px; padding: 0 16px 12px;
+      overflow-x: auto; scrollbar-width: none;
+    }
+    .secTabs::-webkit-scrollbar { display: none; }
+    .secTab {
+      padding: 8px 16px; border-radius: 20px; border: none;
+      font-size: 12.5px; font-weight: 700; cursor: pointer;
+      white-space: nowrap; transition: all .15s; font-family: inherit;
+      background: #fff; color: #666;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    }
+    .secTab.active {
+      background: #3b6ef8; color: #fff;
+      box-shadow: 0 3px 12px rgba(59,110,248,0.35);
+    }
 
     /* Content box */
     .contentBox {
-      background: #fff; border: 1px solid #e0e6ef;
-      border-radius: 12px; padding: 28px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-      min-height: 300px;
+      margin: 0 16px 30px; background: #fff;
+      border-radius: 16px; padding: 22px 18px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+      min-height: 200px;
+    }
+    .loadingState, .emptyState {
+      text-align: center; padding: 48px 20px; color: #bbb; font-size: 14px;
     }
 
-    /* Section blocks */
-    .secBlock { max-width: 680px; }
-    .secTitle  { font-size: 20px; font-weight: 700; margin-bottom: 20px; color: #1a1a2e; }
-    .secDesc   { color: #666; font-size: 14px; line-height: 1.6; }
-
-    .fieldBlock  { margin-bottom: 18px; }
-    .fieldLabel  { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .6px; color: #666; margin-bottom: 6px; }
-    .fieldVal    { font-size: 14px; color: #333; line-height: 1.6; background: #f8f9fc; border: 1px solid #e4e8f0; border-radius: 8px; padding: 10px 14px; }
-
-    .theoryList  { list-style: none; padding: 0; margin-bottom: 14px; }
-    .theoryList li {
-      padding: 9px 14px 9px 36px; margin-bottom: 6px;
-      background: #f8f9fc; border: 1px solid #e4e8f0; border-radius: 8px;
-      font-size: 14px; color: #333; position: relative;
+    /* ── Text section ── */
+    .secMainTitle { font-size: 19px; font-weight: 800; color: #1a1a2e; margin-bottom: 18px; line-height: 1.3; }
+    .secIntro {
+      font-size: 14px; color: #555; line-height: 1.7;
+      background: #f8f9fc; border-radius: 10px; padding: 12px 14px;
+      border-left: 3px solid #3b6ef8; margin-bottom: 16px;
     }
-    .theoryList li::before {
-      content: "▸"; position: absolute; left: 12px; color: #3b6ef8;
+    .textBody {
+      font-size: 14px; color: #333; line-height: 1.75;
+      margin-bottom: 16px;
     }
-    .theoryNote {
-      background: #eff3ff; border-left: 3px solid #3b6ef8;
-      border-radius: 0 8px 8px 0; padding: 10px 14px;
-      font-size: 13px; color: #444; margin-top: 8px;
+    .textBody h3 { font-size: 16px; font-weight: 700; color: #1a1a2e; margin: 14px 0 8px; }
+    .textBody ul, .textBody ol { padding-left: 20px; margin: 8px 0; }
+    .textBody li { margin-bottom: 5px; }
+    .textBody blockquote {
+      border-left: 3px solid #3b6ef8; padding: 9px 14px;
+      background: #eff3ff; border-radius: 0 10px 10px 0; margin: 10px 0; color: #444;
     }
+    .textBody code {
+      background: #f0f2f8; padding: 1px 6px; border-radius: 4px;
+      font-family: monospace; font-size: 13px;
+    }
+    .bulletsList { list-style: none; padding: 0; margin: 0; }
+    .bulletsList li {
+      padding: 9px 14px 9px 34px; margin-bottom: 6px;
+      background: #f8f9fc; border: 1px solid #e8ecf4; border-radius: 9px;
+      font-size: 13.5px; color: #333; position: relative;
+    }
+    .bulletsList li::before { content: "▸"; position: absolute; left: 12px; color: #3b6ef8; font-weight: 700; }
+    .fieldLabel { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .7px; color: #999; margin-bottom: 7px; margin-top: 16px; }
 
-    .videoWrap    { margin-bottom: 20px; }
-    .commentsSection { margin-top: 24px; }
-    .commentsTitle{ font-size: 14px; font-weight: 700; margin-bottom: 10px; color: #333; }
-    .commentCard  {
-      background: #f8f9fc; border: 1px solid #e4e8f0; border-radius: 8px;
+    /* ── Video section ── */
+    .videoWrap { margin-bottom: 14px; }
+    .videoWrap video { width: 100%; border-radius: 12px; max-height: 320px; background: #000; }
+    .videoDesc {
+      font-size: 13px; color: #666; background: #f8f9fc;
+      border-radius: 9px; padding: 10px 13px; margin-bottom: 14px;
+    }
+    .commentCard {
+      background: #f8f9fc; border: 1px solid #e8ecf4; border-radius: 9px;
       padding: 10px 14px; margin-bottom: 8px;
     }
-    .commentText  { font-size: 14px; color: #333; }
-    .commentMeta  { font-size: 11px; color: #aaa; margin-top: 4px; }
+    .commentText { font-size: 13.5px; color: #333; }
+    .commentMeta { font-size: 11px; color: #bbb; margin-top: 3px; }
 
-    .stepsList    { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
-    .stepItem     {
-      display: flex; align-items: flex-start; gap: 12px;
-      background: #f8f9fc; border: 1px solid #e4e8f0; border-radius: 8px;
-      padding: 10px 14px; font-size: 14px; color: #333;
+    /* ── Files section ── */
+    .fileCard {
+      display: flex; align-items: center; gap: 12px;
+      background: #f8f9fc; border: 1px solid #e8ecf4; border-radius: 12px;
+      padding: 13px 14px; margin-bottom: 10px;
+      text-decoration: none; color: #333; transition: background .15s;
     }
-    .stepNum      {
-      min-width: 26px; height: 26px; border-radius: 50%;
+    .fileCard:hover { background: #e8f0fb; }
+    .fileCardIcon { font-size: 28px; flex-shrink: 0; }
+    .fileCardName { flex: 1; font-size: 13.5px; font-weight: 600; color: #1a1a2e; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .fileCardExt  { font-size: 10px; color: #999; text-transform: uppercase; }
+    .fileCardDl   { font-size: 18px; }
+
+    /* ── Practical section ── */
+    .stepItem {
+      display: flex; align-items: flex-start; gap: 12px;
+      background: #f8f9fc; border: 1px solid #e8ecf4; border-radius: 10px;
+      padding: 11px 14px; margin-bottom: 8px; font-size: 13.5px; color: #333;
+    }
+    .stepNum {
+      min-width: 28px; height: 28px; border-radius: 50%;
       background: #3b6ef8; color: #fff; font-size: 12px; font-weight: 700;
       display: flex; align-items: center; justify-content: center; flex-shrink: 0;
     }
     .highlightBox {
       background: #f0fdf4; border: 1px solid rgba(22,163,74,.25);
-      border-radius: 8px; padding: 12px 16px;
-      font-size: 14px; color: #15803d; font-weight: 500;
+      border-radius: 10px; padding: 12px 15px;
+      font-size: 13.5px; color: #15803d; font-weight: 600; margin-top: 10px;
     }
 
-    .yakunText  { font-size: 15px; color: #333; line-height: 1.7; margin-bottom: 16px; }
-    .yakunBold  {
-      font-size: 18px; font-weight: 700; color: #1a6fc4;
-      background: #eff3ff; border-radius: 10px; padding: 14px 18px;
+    /* ── TEST WIDGET ── */
+    .twHeader { margin-bottom: 18px; }
+    .twName   { font-size: 18px; font-weight: 800; color: #1a1a2e; margin-bottom: 5px; }
+    .twMeta   { font-size: 12px; color: #999; }
+    .twProgress { background: #e8edf5; border-radius: 6px; height: 7px; margin-bottom: 5px; overflow: hidden; }
+    .twBar    { height: 100%; border-radius: 6px; background: linear-gradient(90deg,#3b6ef8,#6c9fff); transition: width .3s; }
+    .twProgLabel { display: flex; justify-content: space-between; font-size: 11px; color: #999; margin-bottom: 18px; }
+    .twQuestion {
+      background: #f4f5f8; border-radius: 12px; padding: 15px 16px; margin-bottom: 14px;
     }
-
-    .loadingState, .emptyState {
-      text-align: center; padding: 48px; color: #aaa; font-size: 15px;
+    .twQNum  { font-size: 10.5px; font-weight: 700; color: #3b6ef8; display: block; margin-bottom: 5px; text-transform: uppercase; letter-spacing: .4px; }
+    .twQText { font-size: 15px; font-weight: 600; color: #1a1a2e; line-height: 1.5; }
+    .twOptions { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
+    .twOpt {
+      display: flex; align-items: center; gap: 12px;
+      padding: 12px 15px; border-radius: 12px;
+      border: 2px solid #e8ecf4; background: #fff;
+      font-size: 13.5px; color: #333; cursor: pointer;
+      transition: all .15s; text-align: left; font-family: inherit; width: 100%;
     }
+    .twOpt:hover:not(:disabled) { border-color: #3b6ef8; background: #eff3ff; }
+    .twOptLetter {
+      min-width: 30px; height: 30px; border-radius: 50%;
+      background: #f0f2f8; color: #666; font-size: 12px; font-weight: 700;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .twOpt.twCorrect { border-color: #16a34a; background: #f0fdf4; color: #15803d; }
+    .twOpt.twCorrect .twOptLetter { background: #16a34a; color: #fff; }
+    .twOpt.twWrong   { border-color: #dc2626; background: #fef2f2; color: #dc2626; }
+    .twOpt.twWrong .twOptLetter   { background: #dc2626; color: #fff; }
+    .twOpt.twDisabled { opacity: .45; cursor: default; }
+    .twFeedback {
+      padding: 10px 14px; border-radius: 10px;
+      font-size: 13px; font-weight: 600; margin-bottom: 12px;
+    }
+    .twFbOk  { background: #f0fdf4; color: #15803d; border: 1px solid rgba(22,163,74,.2); }
+    .twFbErr { background: #fef2f2; color: #dc2626; border: 1px solid rgba(220,38,38,.2); }
+    .twNextBtn {
+      width: 100%; padding: 13px; border-radius: 12px; border: none;
+      background: #3b6ef8; color: #fff; font-size: 14px; font-weight: 700;
+      cursor: pointer; font-family: inherit; transition: background .15s;
+    }
+    .twNextBtn:hover { background: #2655d4; }
+    .twResult {
+      text-align: center; padding: 32px 16px; border-radius: 14px;
+    }
+    .twResEmoji { font-size: 56px; margin-bottom: 12px; }
+    .twResScore { font-size: 30px; font-weight: 800; margin-bottom: 6px; }
+    .twResPct   { font-size: 16px; font-weight: 700; color: #666; margin-bottom: 10px; }
+    .twResMsg   { font-size: 13.5px; color: #777; margin-bottom: 22px; line-height: 1.5; }
+    .twRestartBtn {
+      padding: 12px 28px; border-radius: 12px; border: none;
+      background: #3b6ef8; color: #fff; font-size: 14px; font-weight: 700;
+      cursor: pointer; font-family: inherit;
+    }
+    .twResult.twGreat { background: #f0fdf4; }
+    .twResult.twGreat .twResScore { color: #16a34a; }
+    .twResult.twOk    { background: #eff3ff; }
+    .twResult.twOk    .twResScore { color: #3b6ef8; }
+    .twResult.twLow   { background: #fef2f2; }
+    .twResult.twLow   .twResScore { color: #dc2626; }
 
-    /* Simple site header */
-    .siteHeader { background: #3a3a3a; padding: 14px 0; }
-    .headerRow  { display: flex; align-items: center; justify-content: space-between; }
-    .logoText   { font-size: 16px; font-weight: 700; color: #fff; text-decoration: none; }
-    .nav        { display: flex; gap: 18px; }
-    .nav a      { color: rgba(255,255,255,.85); font-size: 14px; text-decoration: none; }
-    .nav a:hover, .nav a.active { color: #fff; text-decoration: underline; }
-    .siteFooter { background: #2f2f2f; color: rgba(255,255,255,.75); text-align: center; padding: 16px; font-size: 13px; margin-top: 40px; }
+    /* ── Footer ── */
+    .siteFooter { background: #2f2f2f; color: rgba(255,255,255,.7); text-align: center; padding: 16px; font-size: 13px; margin-top: 0; }
 
-    @media (max-width: 768px) {
-      .courseLayout { grid-template-columns: 1fr; }
-      .cheroInner   { flex-direction: column; text-align: center; }
+    /* ── Site header ── */
+    .siteHeader { background: #3a3a3a; padding: 13px 18px; display: flex; align-items: center; justify-content: space-between; }
+    .logoText { font-size: 15px; font-weight: 700; color: #fff; text-decoration: none; }
+    .nav a { color: rgba(255,255,255,.8); font-size: 13px; text-decoration: none; margin-left: 14px; }
+    .nav a:hover { color: #fff; }
+
+    @media (min-width: 600px) {
+      .lessonsWrap { max-width: 540px; margin: 0 auto; }
+      .lessonTopBar, .secTabs, .contentBox { max-width: 540px; margin-left: auto; margin-right: auto; }
+      .contentBox { margin-left: auto; margin-right: auto; }
+      .moduleHero { max-width: 540px; margin: 16px auto 0; }
+      .secLabel { max-width: 540px; margin-left: auto; margin-right: auto; padding: 20px 18px 0; }
     }
   </style>
 </head>
 <body>
 
 <header class="siteHeader">
-  <div class="wrap headerRow">
-    <a class="logoText" href="index.html">GeoGAT Akademiya</a>
-    <nav class="nav">
-      <a href="index.html">Bosh sahifa</a>
-      <a href="courses.html" class="active">Kurslar</a>
-      <a href="about.html">Fan haqida</a>
-    </nav>
-  </div>
+  <a class="logoText" href="index.html">GeoGAT Akademiya</a>
+  <nav class="nav">
+    <a href="index.html">Bosh sahifa</a>
+    <a href="courses.html">Kurslar</a>
+  </nav>
 </header>
 
-<main class="wrap">
+<!-- ══════ LESSONS VIEW ══════ -->
+<div id="lessonsView">
+  <!-- Top nav -->
+  <div class="topNav">
+    <button class="topNavBack" onclick="window.location.href='courses.html'">←</button>
+    <div class="topNavTitle" id="navModTitle">Yuklanmoqda...</div>
+    <div class="topNavStar">⭐ 0</div>
+  </div>
 
-  <section id="courseHero"></section>
+  <!-- Module hero -->
+  <div class="moduleHero" id="moduleHero" style="background:linear-gradient(135deg,#4caf7d,#2e7d52)">
+    <div class="heroLeft">
+      <div class="heroBadge" id="heroLevel">—</div>
+      <div class="heroTitle" id="heroTitle">—</div>
+      <div class="heroMeta" id="heroMeta">—</div>
+    </div>
+    <div class="heroEmoji" id="heroEmoji">🌍</div>
+  </div>
 
-  <section class="courseLayout">
+  <!-- Lessons list -->
+  <div class="secLabel">Mavzular</div>
+  <div class="lessonsWrap" id="lessonsWrap">
+    <div class="cardLoading"></div>
+    <div class="cardLoading" style="opacity:.7"></div>
+    <div class="cardLoading" style="opacity:.4"></div>
+  </div>
+</div>
 
-    <aside class="courseSide">
-      <div class="sideBox">
-        <div class="sideTitle">Bo'limlar</div>
-        <nav id="sectionNav"></nav>
+<!-- ══════ CONTENT VIEW ══════ -->
+<div id="contentView">
+  <!-- Top nav -->
+  <div class="topNav">
+    <button class="topNavBack" id="contentBack" onclick="window._goBack()">←</button>
+    <div class="topNavTitle" id="contentNavTitle">—</div>
+  </div>
+
+  <!-- Lesson hero banner -->
+  <div class="lessonTopBar">
+    <div class="lessonHeroBanner" id="lessonHeroBanner">
+      <div class="lhbNum" id="lhbNum">1</div>
+      <div class="lhbInfo">
+        <div class="lhbName" id="lhbName">—</div>
+        <div class="lhbMeta" id="lhbMeta">—</div>
       </div>
+    </div>
+  </div>
 
-      <div class="sideBox">
-        <div class="sideTitle">Modul fayllari</div>
-        <div id="fileList"></div>
-      </div>
-    </aside>
+  <!-- Section tabs -->
+  <div class="secTabs" id="secTabs"></div>
 
-    <article class="courseContent">
-      <div class="contentBox" id="sectionContent">
-        <div class="loadingState">⏳ Yuklanmoqda...</div>
-      </div>
-    </article>
+  <!-- Content box -->
+  <div class="contentBox" id="contentBox">
+    <div class="loadingState">⏳ Yuklanmoqda...</div>
+  </div>
+</div>
 
-  </section>
+<footer class="siteFooter">© <span id="y"></span> GeoGAT Akademiya</footer>
 
-</main>
-
-<footer class="siteFooter">
-  © <span id="y"></span> GeoGAT Akademiya
-</footer>
-
-<script src="tests_data.js"></script>
 <script type="module" src="js/app.js"></script>
-<script type="module">
-  // app.js yuklangandan keyin chaqiriladi
-  // DOMContentLoaded da xavfsiz chaqirish
+<script>
   document.addEventListener("DOMContentLoaded", () => {
-    // kichik kechikish bilan — app.js ning module init uchun
     setTimeout(() => {
-      if (typeof window.loadCoursePage === "function") {
-        window.loadCoursePage();
-      } else {
-        // fallback: app.js module o'zi export qilganda
-        document.dispatchEvent(new Event("appReady"));
-      }
+      if (typeof window.loadCoursePage === "function") window.loadCoursePage();
+      else document.dispatchEvent(new Event("appReady"));
     }, 100);
   });
 </script>
-
 </body>
 </html>
